@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS book(
+    id INT auto_increment PRIMARY KEY,
+    book_name VARCHAR(100),
+    author_name VARCHAR(50),
+    book_type_id INT,
+    finish_status INT,
+    update_time VARCHAR(20),
+    url VARCHAR(100),
+    cover_img VARCHAR(100),
+    info VARCHAR(500)
+);
+
+CREATE TABLE IF NOT EXISTS book_type(
+    id INT auto_increment PRIMARY KEY,
+    type_name varchar(50)
+);
+
+CREATE TABLE IF NOT EXISTS catalogue(
+    id INT auto_increment PRIMARY KEY,
+    book_id INT,
+    chapter_id INT,
+    chapter_name VARCHAR(100),
+    chapter_url VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS chapter(
+    id INT auto_increment PRIMARY KEY,
+    book_id INT,
+    order_id INT,
+    display_name VARCHAR(50),
+    content TEXT
+);
