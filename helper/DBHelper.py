@@ -51,10 +51,11 @@ class MysqlHelper(object):
         for i, k in enumerate(data):
             if i > 0: sql += ', '
             sql += f'{k} = %s'
+        sql = sql % tuple(data.values())
         sql += f' WHERE {condition} '
 
         try:
-            self.cursor.execute(sql, tuple(data.values()))
+            self.cursor.execute(sql)
             self.db.commit()
         except pymysql.err.Error as e:
             logging.exception(e)

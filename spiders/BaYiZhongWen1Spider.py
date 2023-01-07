@@ -19,7 +19,7 @@ class BaYiZhongWen1Spider(BaseRequestsSpider):
         self.base_url = 'https://www.81zw.com/'
         self.search_url = 'https://www.81zw.com/search.php'
 
-        self.fetch_interval = 50
+        self.fetch_interval = 100
         self.tag = 'spiders.BaYiZhongWenSpider.BaYiZhongWen'
 
     def _parse_hot_list(self, html):

@@ -150,7 +150,7 @@ class DBService(object):
         return self.db_helper.query_one(table_name='catalogue', condition=condition)
 
     def update_catalogue_by_bid_cname(self, book_id, chapter_name, data):
-        """ 根据章节 id 更新目录 """
+        """ 根据书籍 id 和章节名称更新目录 """
         condition = f'book_id={book_id} and chapter_name="{chapter_name}" '
         self.db_helper.update(table_name='catalogue', data=data, condition=condition)
 
