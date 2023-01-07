@@ -93,16 +93,7 @@ def main():
     spider = BiQuGe1Spider()
 
     # 《第一序列》
-    # book = spider.scrape_book_index('https://www.biquge7.top/49918')
-
-    # 《明克街13号》
-    # book = spider.scrape_book_index('https://www.biquge7.top/50047')
-
-    # 《夜的命名术》
-    # book = spider.scrape_book_index('https://www.biquge7.top/50049')
-
-    # 《放开那个女巫》
-    book = spider.scrape_book_index('https://www.biquge7.top/50007')
+    book = spider.scrape_book_index('https://www.biquge7.top/49918')
 
     spider.scrape_full_book(book, need_save=True)
 

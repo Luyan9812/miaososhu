@@ -113,9 +113,6 @@ def main():
     # 《恶魔法则》
     book = spider.scrape_book_index('https://www.81zw.com/book/17326/')
 
-    # 《我有一身被动技》
-    # book = spider.scrape_book_index('https://www.81zw.com/book/46667/')
-
     spider.scrape_full_book(book, need_save=True)
 
 

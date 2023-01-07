@@ -44,10 +44,22 @@ class TaskService(object):
             book = spider.scrape_book_index(url=book.url)
             spider.scrape_full_book(book=book, need_save=True)
 
+    def scrape_book(self):
+        """ 提前找好网址，然后一个个爬取 """
+        urls = [
+            'https://www.zwduxs.com/26_26024/',
+            'https://www.biquge365.net/newbook/63611/',
+            'https://www.biquge7.top/34959'
+        ]
+        for url in urls:
+            spider = self.__chose_spider(url)
+            book = spider.scrape_book_index(url=url)
+            spider.scrape_full_book(book=book, need_save=True)
+
 
 def main():
     task = TaskService()
-    task.update_books()
+    task.scrape_book()
 
 
 if __name__ == '__main__':

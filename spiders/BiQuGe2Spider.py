@@ -92,14 +92,8 @@ class BiQuGe2Spider(BaseRequestsSpider):
 def main():
     spider = BiQuGe2Spider()
 
-    # 《逆天邪神》
-    # book = spider.scrape_book_index('https://www.biquge365.net/newbook/88442/')
-
     # 《异世之风流大法师》
-    # book = spider.scrape_book_index('https://www.biquge365.net/newbook/02645/')
-
-    # 《大主宰》
-    book = spider.scrape_book_index('https://www.biquge365.net/newbook/84421/')
+    book = spider.scrape_book_index('https://www.biquge365.net/newbook/02645/')
 
     spider.scrape_full_book(book, need_save=True)
 

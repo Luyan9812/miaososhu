@@ -95,14 +95,8 @@ class BaYiZhongWen2Spider(BaseRequestsSpider):
 def main():
     spider = BaYiZhongWen2Spider()
 
-    # 《元尊》
-    book = spider.scrape_book_index('https://www.zwduxs.com/15_15365/')
-
-    # 《万相之王》
-    # book = spider.scrape_book_index('https://www.zwduxs.com/84_84365/')
-
     # 《不正经的魔导师》
-    # book = spider.scrape_book_index('https://www.zwduxs.com/112_112993/')
+    book = spider.scrape_book_index('https://www.zwduxs.com/112_112993/')
 
     spider.scrape_full_book(book, need_save=True)
 

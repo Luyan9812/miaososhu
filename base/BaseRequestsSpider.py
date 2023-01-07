@@ -100,7 +100,7 @@ class BaseRequestsSpider(object):
         return current_page, total_page, books
 
     @self_catch
-    def scrape_book_index(self, url):
+    def scrape_book_index(self, url: str):
         """ 爬取某本书的首页 """
         html = self.fetch(url)
         book = self._parse_book_index(html)
