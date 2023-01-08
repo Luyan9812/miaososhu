@@ -4,6 +4,7 @@ from service.DBService import DBService
 
 from spiders.BiQuGe1Spider import BiQuGe1Spider
 from spiders.BiQuGe2Spider import BiQuGe2Spider
+from spiders.XiaoGeDaSpider import XiaoGeDaSpider
 from spiders.XiaoShuo147Spider import XiaoShuo147Spider
 from spiders.BaYiZhongWen1Spider import BaYiZhongWen1Spider
 from spiders.BaYiZhongWen2Spider import BaYiZhongWen2Spider
@@ -19,7 +20,8 @@ class TaskService(object):
             'https://www.biquge365.net': BiQuGe2Spider(),
             'https://www.81zw.com': BaYiZhongWen1Spider(),
             'https://www.zwduxs.com': BaYiZhongWen2Spider(),
-            'https://www.147xs.org': XiaoShuo147Spider()
+            'https://www.147xs.org': XiaoShuo147Spider(),
+            'https://www.xgedaa.com': XiaoGeDaSpider()
         }
 
     def chose_spider(self, url: str):
@@ -104,10 +106,9 @@ def _generate_download_dict():
 
 def main():
     url_dict = {
+        '校园寻美录全文阅读': 'https://www.xgedaa.com/a49789/',
         '校花的贴身保镖': 'https://www.147xs.org/book/3290/',
-        '校花的全能保安': 'https://www.zwduxs.com/23_23350/',
         '终极教师': 'https://www.147xs.org/book/8141/',
-        '史上最强炼气期（方羽唐小柔）': 'https://www.biquge7.top/49911',
         '极品修真强少': 'https://www.zwduxs.com/39_39030/',
         '校花的贴身高手': 'https://www.biquge7.top/49909'
     }
