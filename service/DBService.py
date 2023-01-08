@@ -116,6 +116,11 @@ class DBService(object):
         condition = f'url LIKE "{baseurl}%" '
         yield from self._query_one_by_cond_yield(table_name='book', condition=condition, converter=self.__generate_book)
 
+    def update_book_by_id(self, book_id, data: dict):
+        """ 通过书籍 id 更新书籍信息 """
+        condition = f'id={book_id} '
+        self.db_helper.update(table_name='book', data=data, condition=condition)
+
     def should_scrape(self, book: Book):
         """
         判断是否应该爬取 book
@@ -149,10 +154,10 @@ class DBService(object):
         condition = f'book_id={book_id} AND chapter_name="{chapter_name}" '
         return self.db_helper.query_one(table_name='catalogue', condition=condition)
 
-    def query_catalogue_by_book_id(self, book_id):
+    def query_catalogue_by_book_id(self, book_id, order_by=None, limit=None):
         """ 根据书籍 id 查询目录 """
         condition = f'book_id={book_id} '
-        return self.db_helper.query_list(table_name='catalogue', condition=condition)
+        return self.db_helper.query_list(table_name='catalogue', condition=condition, order_by=order_by, limit=limit)
 
     def query_catalogue_by_chapter_id(self, chapter_id):
         """ 根据章节 id 查询目录 """

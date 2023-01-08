@@ -19,7 +19,7 @@ class TaskService(object):
             'https://www.147xs.org': XiaoShuo147Spider()
         }
 
-    def __chose_spider(self, url):
+    def __chose_spider(self, url: str):
         """ 根据 url 选择合适的爬虫 """
         for k in self.spiders:
             if url.startswith(k): return self.spiders[k]
@@ -39,6 +39,21 @@ class TaskService(object):
                 self.db_service.update_chapter_by_cid(cid=chapter.chapter_id, data=chapter.get_db_dict())
                 print('\t' + chapter.display_name)
 
+    def finish_judge(self):
+        """ 判断未完结书籍是否真的未完结 """
+        ids = []
+        is_finish = 0
+        for book in self.db_service.query_book_by_finish_status(is_finish=is_finish):
+            if book is None:
+                print('GET None')
+                continue
+            print(book.book_name)
+            print('\t', '\n\t'.join(list(book.catalogue.keys())[-10:]))
+            answer = input(f'《{book.book_name}》{"未" if is_finish else "已"}完结：')
+            if answer == '1': ids.append(book.book_id)
+        for book_id in ids:
+            self.db_service.update_book_by_id(book_id=book_id, data={'finish_status': 1 - is_finish})
+
     def update_books(self):
         """ 更新数据库里面的书 """
         for book in self.db_service.query_book_by_finish_status(is_finish=0):
@@ -46,13 +61,8 @@ class TaskService(object):
             book = spider.scrape_book_index(url=book.url)
             spider.scrape_full_book(book=book, need_save=True)
 
-    def scrape_book(self):
+    def scrape_book(self, urls):
         """ 提前找好网址，然后一个个爬取 """
-        urls = [
-            'https://www.zwduxs.com/26_26461/',
-            'https://www.biquge7.top/50760',
-            'https://www.147xs.org/book/92279/'
-        ]
         for url in urls:
             spider = self.__chose_spider(url)
             if spider is None: continue
@@ -62,7 +72,7 @@ class TaskService(object):
 
 def main():
     task = TaskService()
-    task.scrape_book()
+    task.finish_judge()
 
 
 if __name__ == '__main__':

@@ -45,7 +45,7 @@ class MysqlHelper(object):
             logging.exception(e)
             self.db.rollback()
 
-    def update(self, table_name, data: dict, condition):
+    def update(self, table_name: str, data: dict, condition: str):
         """ 更新数据 """
         sql = f'UPDATE {table_name} SET '
         for i, k in enumerate(data):

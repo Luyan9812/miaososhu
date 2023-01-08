@@ -81,6 +81,9 @@ class BaseRequestsSpider(object):
             chapter.chapter_id = chapter_id
             if turn % self.fetch_interval == 0:
                 time.sleep(self.sleep_time)
+        if turn == 0:
+            print("没有更新")
+            return book
         chapters = self.service.query_chapter_by_bookid(book_id=book_id)
         book.chapter_list.extend(chapters)
         book.current_chapter = len(chapters)
