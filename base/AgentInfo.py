@@ -17,5 +17,6 @@ cookies = {
     'spiders.XiaoShuo147Spider.XiaoShuo147': '',
     'spiders.XiaoGeDaSpider.XiaoGeDaSpider': 'PHPSESSID=tooqe2e16pu8sbd4tnf6orfr4r; iushfuisb=fc0a3f8b; '
                                              'Hm_lvt_74a6efae6937a14bde60bd85fadbdef0=1673108534; '
-                                             'Hm_lpvt_74a6efae6937a14bde60bd85fadbdef0=1673179748 '
+                                             'Hm_lpvt_74a6efae6937a14bde60bd85fadbdef0=1673179748 ',
+    'spiders.AixsSpider.AixsSpider': 'clickbids=95273,15908,480366'
 }

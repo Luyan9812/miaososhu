@@ -2,6 +2,7 @@ import requests
 
 from service.DBService import DBService
 
+from spiders.AixsSpider import AixsSpider
 from spiders.BiQuGe1Spider import BiQuGe1Spider
 from spiders.BiQuGe2Spider import BiQuGe2Spider
 from spiders.XiaoGeDaSpider import XiaoGeDaSpider
@@ -21,7 +22,8 @@ class TaskService(object):
             'www.81zw.com': BaYiZhongWen1Spider(),
             'www.zwduxs.com': BaYiZhongWen2Spider(),
             'www.147xs.org': XiaoShuo147Spider(),
-            'www.xgedaa.com': XiaoGeDaSpider()
+            'www.xgedaa.com': XiaoGeDaSpider(),
+            'www.aixs.la': AixsSpider()
         }
 
     def chose_spider(self, url: str):
@@ -89,11 +91,6 @@ class TaskService(object):
 
 def _generate_download_dict():
     urls = [
-        'https://www.147xs.org/book/3290/',
-        'https://www.zwduxs.com/23_23350/',
-        'https://www.147xs.org/book/8141/',
-        'https://www.biquge7.top/49911',
-        'https://www.zwduxs.com/39_39030/',
         'https://www.biquge7.top/49909',
     ]
     download_dict = {}
@@ -106,10 +103,6 @@ def _generate_download_dict():
 
 def main():
     url_dict = {
-        '校园寻美录全文阅读': 'https://www.xgedaa.com/a49789/',
-        '校花的贴身保镖': 'https://www.147xs.org/book/3290/',
-        '终极教师': 'https://www.147xs.org/book/8141/',
-        '极品修真强少': 'https://www.zwduxs.com/39_39030/',
         '校花的贴身高手': 'https://www.biquge7.top/49909'
     }
     # _generate_download_dict()
