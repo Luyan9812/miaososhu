@@ -33,12 +33,13 @@ class XiaoGeDaSpider(BaseRequestsSpider):
         html = self.fetch(chapter_url)
         chapter = self._parse_chapter(html)
 
-        total_page = int(chapter.display_name.rsplit('/', maxsplit=1)[1].replace(')', '').strip())
-        for i in range(total_page - 1):
-            sub_url = chapter_url.replace('.html', '') + f'_{i + 1}.html'
-            html = self.fetch(sub_url)
-            sub_chapter = self._parse_chapter(html)
-            chapter.content += sub_chapter.content
+        if chapter.display_name.rfind('/') >= 0:
+            total_page = int(chapter.display_name.rsplit('/', maxsplit=1)[1].replace(')', '').strip())
+            for i in range(total_page - 1):
+                sub_url = chapter_url.replace('.html', '') + f'_{i + 1}.html'
+                html = self.fetch(sub_url)
+                sub_chapter = self._parse_chapter(html)
+                chapter.content += sub_chapter.content
 
         # 爬取的时候输出当前爬哪一章
         print('\t' + chapter.display_name)

@@ -16,18 +16,18 @@ class TaskService(object):
     def __init__(self):
         self.db_service = DBService()
         self.spiders = {
-            'https://www.biquge7.top': BiQuGe1Spider(),
-            'https://www.biquge365.net': BiQuGe2Spider(),
-            'https://www.81zw.com': BaYiZhongWen1Spider(),
-            'https://www.zwduxs.com': BaYiZhongWen2Spider(),
-            'https://www.147xs.org': XiaoShuo147Spider(),
-            'https://www.xgedaa.com': XiaoGeDaSpider()
+            'www.biquge7.top': BiQuGe1Spider(),
+            'www.biquge365.net': BiQuGe2Spider(),
+            'www.81zw.com': BaYiZhongWen1Spider(),
+            'www.zwduxs.com': BaYiZhongWen2Spider(),
+            'www.147xs.org': XiaoShuo147Spider(),
+            'www.xgedaa.com': XiaoGeDaSpider()
         }
 
     def chose_spider(self, url: str):
         """ 根据 url 选择合适的爬虫 """
         for k in self.spiders:
-            if url.startswith(k): return self.spiders[k]
+            if k in url: return self.spiders[k]
         return None
 
     def content_fix_81zw(self):
