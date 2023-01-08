@@ -13,6 +13,9 @@ class DBService(object):
     def __init__(self):
         self.db_helper = MysqlHelper(dbname='miao_novel')
         self.__on_check()
+        self.TABLE_BOOK = 'book'
+        self.TABLE_CHAPTER = 'chapter'
+        self.TABLE_CATALOGUE = 'catalogue'
 
     def __on_check(self):
         """ 检查表是否存在 """
@@ -73,7 +76,7 @@ class DBService(object):
     def query_book_by_bookname_authorname(self, book_name, author_name):
         """ 按照书名、作者名精确查找书籍 """
         condition = f'book_name="{book_name}" AND author_name="{author_name}" '
-        row = self.db_helper.query_one(table_name='book', condition=condition)
+        row = self.db_helper.query_one(table_name=self.TABLE_BOOK, condition=condition)
         book = self.__generate_book(row)
         return book
 
@@ -81,7 +84,7 @@ class DBService(object):
         """ 根据书名模糊匹配 """
         books = []
         condition = f'book_name LIKE "%{kw}%" '
-        for row in self.db_helper.query_list(table_name='book', condition=condition):
+        for row in self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition):
             book = self.__generate_book(row=row)
             books.append(book)
         return books
@@ -89,7 +92,7 @@ class DBService(object):
     def query_book_by_id(self, book_id):
         """ 根据 id 查找书籍 """
         condition = f'id={book_id} '
-        row = self.db_helper.query_one(table_name='book', condition=condition)
+        row = self.db_helper.query_one(table_name=self.TABLE_BOOK, condition=condition)
         book = self.__generate_book(row)
         return book
 
@@ -97,29 +100,32 @@ class DBService(object):
         """ 根据作者名查找书籍 """
         books = []
         condition = f'author_name="{author_name}" '
-        for row in self.db_helper.query_list(table_name='book', condition=condition):
+        for row in self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition):
             book = self.__generate_book(row)
             books.append(book)
         return books
 
     def query_all_books(self):
         """ 查询所有书籍 """
-        yield from self._query_one_by_cond_yield(table_name='book', condition='1=1 ', converter=self.__generate_book)
+        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK, 
+                                                 condition='1=1 ', converter=self.__generate_book)
 
     def query_book_by_finish_status(self, is_finish):
         """ 根据完结状态查询书籍 """
         condition = f'finish_status={is_finish} '
-        yield from self._query_one_by_cond_yield(table_name='book', condition=condition, converter=self.__generate_book)
+        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK, 
+                                                 condition=condition, converter=self.__generate_book)
 
     def query_book_by_website(self, baseurl):
         """ 根据所属网站查询书籍 """
         condition = f'url LIKE "{baseurl}%" '
-        yield from self._query_one_by_cond_yield(table_name='book', condition=condition, converter=self.__generate_book)
+        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK, 
+                                                 condition=condition, converter=self.__generate_book)
 
     def update_book_by_id(self, book_id, data: dict):
         """ 通过书籍 id 更新书籍信息 """
         condition = f'id={book_id} '
-        self.db_helper.update(table_name='book', data=data, condition=condition)
+        self.db_helper.update(table_name=self.TABLE_BOOK, data=data, condition=condition)
 
     def should_scrape(self, book: Book):
         """
@@ -138,7 +144,7 @@ class DBService(object):
             data = book.get_db_dict()
             type_id = self.save_type(book.book_type)
             data['book_type_id'] = type_id
-            book_id = self.db_helper.insert(table_name='book', data=data)
+            book_id = self.db_helper.insert(table_name=self.TABLE_BOOK, data=data)
             book.book_id = book_id
         else: book.book_id = book_id = b.book_id
         self.save_catalogues(book)
@@ -147,34 +153,35 @@ class DBService(object):
     def count_catalogue(self, book_id):
         """ 根据书籍 id 统计目录条数 """
         condition = f'book_id={book_id} '
-        return self.db_helper.count(table_name='catalogue', condition=condition)
+        return self.db_helper.count(table_name=self.TABLE_CATALOGUE, condition=condition)
 
     def query_catalogue_one(self, book_id, chapter_name):
         """ 根据书籍 id 和章节名称唯一确定目录 """
         condition = f'book_id={book_id} AND chapter_name="{chapter_name}" '
-        return self.db_helper.query_one(table_name='catalogue', condition=condition)
+        return self.db_helper.query_one(table_name=self.TABLE_CATALOGUE, condition=condition)
 
     def query_catalogue_by_book_id(self, book_id, order_by=None, limit=None):
         """ 根据书籍 id 查询目录 """
         condition = f'book_id={book_id} '
-        return self.db_helper.query_list(table_name='catalogue', condition=condition, order_by=order_by, limit=limit)
+        return self.db_helper.query_list(table_name=self.TABLE_CATALOGUE,
+                                         condition=condition, order_by=order_by, limit=limit)
 
     def query_catalogue_by_chapter_id(self, chapter_id):
         """ 根据章节 id 查询目录 """
         condition = f'chapter_id={chapter_id} '
-        return self.db_helper.query_one(table_name='catalogue', condition=condition)
+        return self.db_helper.query_one(table_name=self.TABLE_CATALOGUE, condition=condition)
 
     def update_catalogue_by_bid_cname(self, book_id, chapter_name, data):
         """ 根据书籍 id 和章节名称更新目录 """
         condition = f'book_id={book_id} and chapter_name="{chapter_name}" '
-        self.db_helper.update(table_name='catalogue', data=data, condition=condition)
+        self.db_helper.update(table_name=self.TABLE_CATALOGUE, data=data, condition=condition)
 
     def save_catalogue_one(self, book_id, chapter_name, chapter_url):
         """ 存储一条的目录 """
         c = self.query_catalogue_one(book_id=book_id, chapter_name=chapter_name)
         if c: return c[0]
         data = {'book_id': book_id, 'chapter_name': chapter_name, 'chapter_url': chapter_url}
-        return self.db_helper.insert(table_name='catalogue', data=data)
+        return self.db_helper.insert(table_name=self.TABLE_CATALOGUE, data=data)
 
     def save_catalogues(self, book: Book):
         """ 存储一本书的目录 """
@@ -195,13 +202,14 @@ class DBService(object):
     def count_chapter(self, book_id):
         """ 根据书籍 id 统计章节数目 """
         condition = f'book_id={book_id} '
-        return self._count_by_cond(table_name='chapter', condition=condition)
+        return self._count_by_cond(table_name=self.TABLE_CHAPTER, condition=condition)
 
     def query_chapter_by_bookid(self, book_id, limit=None):
         """ 根据书籍 id 获取章节 """
         chapters = []
         condition = f'book_id={book_id} '
-        for row in self.db_helper.query_list(table_name='chapter', condition=condition, order_by='order_id', limit=limit):
+        for row in self.db_helper.query_list(table_name=self.TABLE_CHAPTER, 
+                                             condition=condition, order_by='order_id', limit=limit):
             chapter = self.__generate_chapter(row)
             chapters.append(chapter)
         return chapters
@@ -209,30 +217,30 @@ class DBService(object):
     def query_chapter_by_bookid_yield(self, book_id):
         """ 根据书籍 id 获取章节（章节一个个返回） """
         condition = f'book_id={book_id} '
-        yield from self._query_one_by_cond_yield(table_name='chapter', condition=condition,
+        yield from self._query_one_by_cond_yield(table_name=self.TABLE_CHAPTER, condition=condition,
                                                  order_by='order_id', converter=self.__generate_chapter)
 
     def query_chapter_one(self, book_id, display_name):
         """ 根据书籍 id 和 章节名称唯一确定一个章节 """
         condition = f'book_id={book_id} AND display_name="{display_name}" '
-        row = self.db_helper.query_one(table_name='chapter', condition=condition)
+        row = self.db_helper.query_one(table_name=self.TABLE_CHAPTER, condition=condition)
         return self.__generate_chapter(row)
 
     def query_chapter_by_id(self, chapter_id):
         """ 根据 id 查找章节 """
         condition = f'id={chapter_id} '
-        row = self.db_helper.query_one(table_name='chapter', condition=condition)
+        row = self.db_helper.query_one(table_name=self.TABLE_CHAPTER, condition=condition)
         return self.__generate_chapter(row)
 
     def update_chapter_by_cid(self, cid, data: dict):
         """ 根据章节 id 更新章节信息 """
         condition = f'id={cid} '
-        self.db_helper.update(table_name='chapter', data=data, condition=condition)
+        self.db_helper.update(table_name=self.TABLE_CHAPTER, data=data, condition=condition)
 
     def update_chapter_by_bid_cname(self, book_id, display_name, data):
         """ 根据书籍 id 和章节名称更新目录 """
         condition = f'book_id={book_id} and display_name="{display_name}" '
-        self.db_helper.update(table_name='chapter', data=data, condition=condition)
+        self.db_helper.update(table_name=self.TABLE_CHAPTER, data=data, condition=condition)
 
     def save_chapter(self, book_id, chapter: Chapter):
         """ 保存章节信息 """
@@ -240,7 +248,7 @@ class DBService(object):
         if not ch:
             data = {'book_id': book_id, 'order_id': chapter.order_id,
                     'display_name': chapter.display_name, 'content': chapter.content}
-            chapter_id = self.db_helper.insert(table_name='chapter', data=data)
+            chapter_id = self.db_helper.insert(table_name=self.TABLE_CHAPTER, data=data)
         else: chapter_id = ch.chapter_id
         data = {'chapter_id': chapter_id}
         self.update_catalogue_by_bid_cname(book_id=book_id, chapter_name=chapter.display_name, data=data)
