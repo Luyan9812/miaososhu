@@ -1,4 +1,7 @@
+import requests
+
 from service.DBService import DBService
+
 from spiders.BiQuGe1Spider import BiQuGe1Spider
 from spiders.BiQuGe2Spider import BiQuGe2Spider
 from spiders.XiaoShuo147Spider import XiaoShuo147Spider
@@ -19,7 +22,7 @@ class TaskService(object):
             'https://www.147xs.org': XiaoShuo147Spider()
         }
 
-    def __chose_spider(self, url: str):
+    def chose_spider(self, url: str):
         """ 根据 url 选择合适的爬虫 """
         for k in self.spiders:
             if url.startswith(k): return self.spiders[k]
@@ -39,10 +42,9 @@ class TaskService(object):
                 self.db_service.update_chapter_by_cid(cid=chapter.chapter_id, data=chapter.get_db_dict())
                 print('\t' + chapter.display_name)
 
-    def finish_judge(self):
+    def finish_judge(self, is_finish=0):
         """ 判断未完结书籍是否真的未完结 """
         ids = []
-        is_finish = 0
         for book in self.db_service.query_book_by_finish_status(is_finish=is_finish):
             if book is None:
                 print('GET None')
@@ -57,23 +59,62 @@ class TaskService(object):
     def update_books(self):
         """ 更新数据库里面的书 """
         for book in self.db_service.query_book_by_finish_status(is_finish=0):
-            spider = self.__chose_spider(book.url)
+            spider = self.chose_spider(book.url)
             book = spider.scrape_book_index(url=book.url)
             spider.scrape_full_book(book=book, need_save=True)
 
-    def scrape_book(self, urls):
+    def scrape_book(self, url_dict: dict):
         """ 提前找好网址，然后一个个爬取 """
-        for url in urls:
-            spider = self.__chose_spider(url)
-            if spider is None: continue
-            book = spider.scrape_book_index(url=url)
-            spider.scrape_full_book(book=book, need_save=True)
+        q_list = []
+        p_list = list(url_dict.values())
+        while True:
+            can_break = True
+            for url in p_list:
+                try:
+                    if not url: continue
+                    spider = self.chose_spider(url)
+                    if spider is None: continue
+                    book = spider.scrape_book_index(url=url)
+                    spider.scrape_full_book(book=book, need_save=True)
+                except requests.RequestException:
+                    can_break = False
+                    q_list.append(url)
+            if can_break: break
+            p_list.clear()
+            p_list.extend(q_list)
+            q_list.clear()
+
+
+def _generate_download_dict():
+    urls = [
+        'https://www.147xs.org/book/3290/',
+        'https://www.zwduxs.com/23_23350/',
+        'https://www.147xs.org/book/8141/',
+        'https://www.biquge7.top/49911',
+        'https://www.zwduxs.com/39_39030/',
+        'https://www.biquge7.top/49909',
+    ]
+    download_dict = {}
+    for url in urls:
+        spider = task.chose_spider(url=url)
+        book = spider.scrape_book_index(url=url)
+        download_dict[book.book_name] = url
+    print(download_dict)
 
 
 def main():
-    task = TaskService()
-    task.finish_judge()
+    url_dict = {
+        '校花的贴身保镖': 'https://www.147xs.org/book/3290/',
+        '校花的全能保安': 'https://www.zwduxs.com/23_23350/',
+        '终极教师': 'https://www.147xs.org/book/8141/',
+        '史上最强炼气期（方羽唐小柔）': 'https://www.biquge7.top/49911',
+        '极品修真强少': 'https://www.zwduxs.com/39_39030/',
+        '校花的贴身高手': 'https://www.biquge7.top/49909'
+    }
+    # _generate_download_dict()
+    task.scrape_book(url_dict=url_dict)
 
 
 if __name__ == '__main__':
+    task = TaskService()
     main()

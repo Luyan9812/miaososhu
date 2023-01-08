@@ -62,7 +62,7 @@ class BaseRequestsSpider(object):
     def scrape_full_book(self, book: Book, need_save=True):
         """ 爬取整本书 """
         turn = 0
-        print(book.book_name)
+        print(f'\n《{book.book_name}》')
         if not self.service.should_scrape(book):
             print('书籍来源不匹配，不予爬取')
             return None
@@ -73,6 +73,7 @@ class BaseRequestsSpider(object):
             ch_name, ch_url = ch
             if ch_name not in chapter_names: continue
             turn += 1
+            print(f'《{book.book_name}》\t{i}/{book.total_chapter}', end='')
             chapter = self.scrape_chapter(ch_url)
             chapter.order_id = i
             chapter.display_name = ch_name
