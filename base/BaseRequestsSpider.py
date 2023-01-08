@@ -63,6 +63,9 @@ class BaseRequestsSpider(object):
         """ 爬取整本书 """
         turn = 0
         print(book.book_name)
+        if not self.service.should_scrape(book):
+            print('书籍来源不匹配，不予爬取')
+            return None
         book_id = self.service.save_book(book)
         rows = self.service.query_catalogue_by_book_id(book_id=book_id)
         chapter_names = list(map(lambda x: x[3], filter(lambda x: not x[2] or x[2] < 0, rows)))
@@ -108,7 +111,7 @@ class BaseRequestsSpider(object):
         return book
 
     @self_catch
-    def scrape_chapter(self, chapter_url):
+    def scrape_chapter(self, chapter_url: str):
         """ 根据链接爬取某一个章节内容 """
         html = self.fetch(chapter_url)
         chapter = self._parse_chapter(html)

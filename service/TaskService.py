@@ -1,6 +1,7 @@
 from service.DBService import DBService
 from spiders.BiQuGe1Spider import BiQuGe1Spider
 from spiders.BiQuGe2Spider import BiQuGe2Spider
+from spiders.XiaoShuo147Spider import XiaoShuo147Spider
 from spiders.BaYiZhongWen1Spider import BaYiZhongWen1Spider
 from spiders.BaYiZhongWen2Spider import BaYiZhongWen2Spider
 
@@ -14,14 +15,15 @@ class TaskService(object):
             'https://www.biquge7.top': BiQuGe1Spider(),
             'https://www.biquge365.net': BiQuGe2Spider(),
             'https://www.81zw.com': BaYiZhongWen1Spider(),
-            'https://www.zwduxs.com': BaYiZhongWen2Spider()
+            'https://www.zwduxs.com': BaYiZhongWen2Spider(),
+            'https://www.147xs.org': XiaoShuo147Spider()
         }
 
     def __chose_spider(self, url):
         """ 根据 url 选择合适的爬虫 """
         for k in self.spiders:
             if url.startswith(k): return self.spiders[k]
-        return self.spiders['https://www.biquge7.top']
+        return None
 
     def content_fix_81zw(self):
         """ 删除 @BaYiZhongWen1Spider 爬取的小说中废话部分 """
@@ -47,12 +49,13 @@ class TaskService(object):
     def scrape_book(self):
         """ 提前找好网址，然后一个个爬取 """
         urls = [
-            'https://www.zwduxs.com/26_26024/',
-            'https://www.biquge365.net/newbook/63611/',
-            'https://www.biquge7.top/34959'
+            'https://www.zwduxs.com/26_26461/',
+            'https://www.biquge7.top/50760',
+            'https://www.147xs.org/book/92279/'
         ]
         for url in urls:
             spider = self.__chose_spider(url)
+            if spider is None: continue
             book = spider.scrape_book_index(url=url)
             spider.scrape_full_book(book=book, need_save=True)
 

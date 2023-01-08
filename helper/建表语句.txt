@@ -27,6 +27,6 @@ CREATE TABLE IF NOT EXISTS chapter(
     id INT auto_increment PRIMARY KEY,
     book_id INT,
     order_id INT,
-    display_name VARCHAR(50),
+    display_name VARCHAR(100),
     content TEXT
 );

@@ -70,9 +70,9 @@ class DBService(object):
         book.current_chapter = self.count_chapter(book_id=book_id)
         return book
 
-    def query_book_one(self, book: Book):
+    def query_book_by_bookname_authorname(self, book_name, author_name):
         """ 按照书名、作者名精确查找书籍 """
-        condition = f'book_name="{book.book_name}" AND author_name="{book.author_name}" '
+        condition = f'book_name="{book_name}" AND author_name="{author_name}" '
         row = self.db_helper.query_one(table_name='book', condition=condition)
         book = self.__generate_book(row)
         return book
@@ -116,9 +116,19 @@ class DBService(object):
         condition = f'url LIKE "{baseurl}%" '
         yield from self._query_one_by_cond_yield(table_name='book', condition=condition, converter=self.__generate_book)
 
+    def should_scrape(self, book: Book):
+        """
+        判断是否应该爬取 book
+        按照书名与作者名查询，满足以下任一条件的才允许爬取：
+        1. 数据库中不存在该书籍
+        2. 数据库存在且要爬取的站点与数据库中的一致（保证数据的一致性）
+        """
+        b = self.query_book_by_bookname_authorname(book_name=book.book_name, author_name=book.author_name)
+        return b is None or b.url == book.url
+
     def save_book(self, book: Book):
         """ 存储书籍 """
-        b = self.query_book_one(book)
+        b = self.query_book_by_bookname_authorname(book_name=book.book_name, author_name=book.author_name)
         if not b:
             data = book.get_db_dict()
             type_id = self.save_type(book.book_type)
