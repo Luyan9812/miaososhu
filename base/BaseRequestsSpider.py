@@ -4,7 +4,6 @@ import requests
 import base.AgentInfo as Agent
 
 from os.path import exists
-
 from model.Book import Book
 from base.Exceptions import self_catch
 from service.DBService import DBService
@@ -59,6 +58,29 @@ class BaseRequestsSpider(object):
             raise StatusException(url, resp.status_code)
         return resp.content
 
+    def get_search_dict(self, keyword, page=1):
+        """ 获取搜索键值对 """
+        return {}
+
+    @self_catch
+    def search(self, keyword: str, page=1):
+        """ 搜索书籍 """
+        return self.search_post(keyword=keyword, page=page)
+
+    def search_get(self, keyword: str, page=1):
+        """ 根据关键字和页码获取书籍列表 """
+        params = self.get_search_dict(keyword=keyword, page=page)
+        html = self.fetch(url=self.search_url, params=params)
+        current_page, total_page, books = self._parse_search_page(html)
+        return current_page, total_page, books
+
+    def search_post(self, keyword: str, page=1):
+        """ 根据关键字和页码获取书籍列表 """
+        params = self.get_search_dict(keyword=keyword, page=page)
+        html = self.fetch_post(url=self.search_url, data=params)
+        current_page, total_page, books = self._parse_search_page(html)
+        return current_page, total_page, books
+
     def scrape_full_book(self, book: Book, need_save=True, force_generate_file=False):
         """ 爬取整本书 """
         turn = 0
@@ -97,14 +119,6 @@ class BaseRequestsSpider(object):
         html = self.fetch(self.hot_url)
         books = self._parse_hot_list(html)
         return books
-
-    @self_catch
-    def search(self, keyword: str, page=1):
-        """ 根据关键字和页码获取书籍列表 """
-        params = {"keyword": keyword, 'page': page}
-        html = self.fetch(self.search_url, params=params)
-        current_page, total_page, books = self._parse_search_page(html)
-        return current_page, total_page, books
 
     @self_catch
     def scrape_book_index(self, url: str):

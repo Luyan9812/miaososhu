@@ -20,12 +20,9 @@ class XiaoGeDaSpider(BaseRequestsSpider):
 
         self.tag = 'spiders.XiaoGeDaSpider.XiaoGeDaSpider'
 
-    @self_catch
-    def search(self, keyword: str, page=1):
-        data = {'action': 'search', 'q': keyword}
-        html = self.fetch_post(url=self.search_url, data=data)
-        current_page, total_page, books = self._parse_search_page(html)
-        return current_page, total_page, books
+    def get_search_dict(self, keyword, page=1):
+        """ 获取搜索键值对 """
+        return {'action': 'search', 'q': keyword}
 
     @self_catch
     def scrape_chapter(self, chapter_url: str):

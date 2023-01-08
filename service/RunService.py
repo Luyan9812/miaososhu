@@ -1,8 +1,10 @@
-from service.TaskService import TaskService
+from spiders.XiaoGeDaSpider import XiaoGeDaSpider
 
 
 def main():
-    pass
+    spider = XiaoGeDaSpider()
+    _, _, books = spider.search(keyword='诛仙')
+    print(books)
 
 
 if __name__ == '__main__':

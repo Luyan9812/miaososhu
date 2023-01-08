@@ -4,6 +4,7 @@ from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
 from parsel.selector import Selector
+from base.Exceptions import self_catch
 from base.BaseRequestsSpider import BaseRequestsSpider
 
 
@@ -29,6 +30,15 @@ class BiQuGe1Spider(BaseRequestsSpider):
             'referer': 'https://www.biquge7.top/'
         }
         return headers
+
+    def get_search_dict(self, keyword, page=1):
+        """ 获取搜索键值对 """
+        return {"keyword": keyword, 'page': page}
+
+    @self_catch
+    def search(self, keyword: str, page=1):
+        """ 搜索书籍 """
+        return self.search_get(keyword=keyword, page=page)
 
     def _parse_hot_list(self, html: str):
         """ 从界面里解析出所有的书本信息 """

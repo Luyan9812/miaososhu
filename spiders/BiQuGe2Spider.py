@@ -2,7 +2,6 @@ from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
 from parsel.selector import Selector
-from base.Exceptions import self_catch
 from base.BaseRequestsSpider import BaseRequestsSpider
 
 
@@ -21,12 +20,9 @@ class BiQuGe2Spider(BaseRequestsSpider):
         self.base_url = 'https://www.biquge365.net/'
         self.search_url = 'https://www.biquge365.net/s.php'
 
-    @self_catch
-    def search(self, keyword: str, page=1):
-        data = {'type': 'articlename', 's': keyword}
-        html = self.fetch_post(url=self.search_url, data=data)
-        current_page, total_page, books = self._parse_search_page(html)
-        return current_page, total_page, books
+    def get_search_dict(self, keyword, page=1):
+        """ 获取搜索键值对 """
+        return {'type': 'articlename', 's': keyword}
 
     def _parse_hot_list(self, html: str):
         """ 从界面里解析出所有的书本信息 """

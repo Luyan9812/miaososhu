@@ -67,6 +67,16 @@ class TaskService(object):
             book = spider.scrape_book_index(url=book.url)
             spider.scrape_full_book(book=book, need_save=True)
 
+    def search_all(self, keyword, page=1):
+        """ 使用所有爬虫的搜索功能 """
+        for spider in self.spiders.values():
+            print(spider.tag)
+            _, _, books = spider.search(keyword=keyword, page=page)
+            books = books[0: 5]
+            for book in books:
+                print(book)
+            print('\n\n\n\n')
+
     def scrape_book(self, url_dict: dict):
         """ 提前找好网址，然后一个个爬取 """
         q_list = []

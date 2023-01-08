@@ -4,7 +4,6 @@ from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
 from parsel.selector import Selector
-from base.Exceptions import self_catch
 from base.BaseRequestsSpider import BaseRequestsSpider
 
 
@@ -26,12 +25,9 @@ class XiaoShuo147Spider(BaseRequestsSpider):
         """ 网站请求头的封装 """
         return {'User-Agent': Agent.USER_AGENT, 'referer': self.base_url}
 
-    @self_catch
-    def search(self, keyword: str, page=1):
-        data = {'keyword': keyword}
-        html = self.fetch_post(url=self.search_url, data=data)
-        current_page, total_page, books = self._parse_search_page(html)
-        return current_page, total_page, books
+    def get_search_dict(self, keyword, page=1):
+        """ 获取搜索键值对 """
+        return {'keyword': keyword}
 
     def _parse_hot_list(self, html):
         """ 解析热文书籍 """
