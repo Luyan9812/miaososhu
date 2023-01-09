@@ -19,5 +19,7 @@ cookies = {
                                              'Hm_lvt_74a6efae6937a14bde60bd85fadbdef0=1673108534; '
                                              'loadnum_49789_384=1; iushfuisb=b1372923; '
                                              'Hm_lpvt_74a6efae6937a14bde60bd85fadbdef0=1673199629',
-    'spiders.AixsSpider.AixsSpider': 'clickbids=95273,15908,480366'
+    'spiders.AixsSpider.AixsSpider': 'clickbids=95273,15908,480366',
+    'spiders.YanQingXiaoShuoSpider.YanQingXiaoShuoSpider': 'Hm_lvt_01b9660a0d45a278311cf8ab3e9b490e=1673266700; '
+                                                           'Hm_lpvt_01b9660a0d45a278311cf8ab3e9b490e=1673268083 '
 }

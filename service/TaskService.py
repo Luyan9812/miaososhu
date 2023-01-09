@@ -9,6 +9,7 @@ from spiders.XiaoGeDaSpider import XiaoGeDaSpider
 from spiders.XiaoShuo147Spider import XiaoShuo147Spider
 from spiders.BaYiZhongWen1Spider import BaYiZhongWen1Spider
 from spiders.BaYiZhongWen2Spider import BaYiZhongWen2Spider
+from spiders.YanQingXiaoShuoSpider import YanQingXiaoShuoSpider
 
 
 class TaskService(object):
@@ -23,7 +24,8 @@ class TaskService(object):
             'www.zwduxs.com': BaYiZhongWen2Spider(),
             'www.147xs.org': XiaoShuo147Spider(),
             'www.xgedaa.com': XiaoGeDaSpider(),
-            'www.aixs.la': AixsSpider()
+            'www.aixs.la': AixsSpider(),
+            'www.xianqihaotianmi.com': YanQingXiaoShuoSpider()
         }
 
     def chose_spider(self, url: str):
@@ -113,7 +115,10 @@ def _generate_download_dict():
 
 def main():
     url_dict = {
-        '校花的贴身高手': 'https://www.biquge7.top/49909'
+        '无光之月': 'https://www.aixs.la/book/166866.html',
+        '校花的贴身兵王': 'https://www.xianqihaotianmi.com/book/6035.html',
+        '校园绝品狂徒': 'https://www.xgedaa.com/a16747/',
+        '校花之贴身高手': 'https://www.biquge7.top/35202'
     }
     # _generate_download_dict()
     task.scrape_book(url_dict=url_dict)

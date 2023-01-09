@@ -9,6 +9,7 @@ sites = {
     'https://www.biquge365.net/',
     'https://www.xgedaa.com/',
     'https://www.147xs.org/',
+    'https://www.xianqihaotianmi.com/'
 }
 
 
