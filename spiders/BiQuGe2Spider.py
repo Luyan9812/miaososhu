@@ -34,6 +34,8 @@ class BiQuGe2Spider(BaseRequestsSpider):
             book_name = li.xpath('./h3/a/text()').get()
             cover_img = urljoin(self.base_url, cover_img)
             url = urljoin(self.base_url, li.xpath('./h3/a/@href').get())
+            if 'newbook'not in url:
+                url = url.replace('book', 'newbook')
             books.append(Book(book_name=book_name, author_name='', update_time='',
                               book_type='', info=info, finish_status=-1, url=url, cover_img=cover_img))
         return books
@@ -47,6 +49,8 @@ class BiQuGe2Spider(BaseRequestsSpider):
             update_time = li.xpath('./span[5]/text()').get()
             author_name = li.xpath('./span[4]/a/text()').get()
             url = urljoin(self.base_url, li.xpath('./span[2]/a/@href').get())
+            if 'newbook'not in url:
+                url = url.replace('book', 'newbook')
             book_type = li.xpath('./span[1]/a/text()').get().replace('[', '').replace(']', '')
             books.append(Book(book_name=book_name, author_name=author_name, update_time=update_time,
                               book_type=book_type, info='', finish_status=-1, url=url, cover_img=''))
@@ -88,10 +92,10 @@ class BiQuGe2Spider(BaseRequestsSpider):
 def main():
     spider = BiQuGe2Spider()
 
-    # 《异世之风流大法师》
-    book = spider.scrape_book_index('https://www.biquge365.net/newbook/02645/')
+    # 《邪神传说》
+    book = spider.scrape_book_index('https://www.biquge365.net/newbook/38255/')
 
-    spider.scrape_full_book(book, need_save=True)
+    spider.scrape_full_book(book, need_save=True, force_generate_file=True)
 
 
 if __name__ == '__main__':
