@@ -110,7 +110,7 @@ class BaYiZhongWen1Spider(BaseRequestsSpider):
         selector = Selector(html)
         content = selector.xpath('//div[@id="content"]/text()').getall()
         display_name = selector.xpath('//div[@class="bookname"]/h1/text()').get()
-        content = '\n\n'.join(list(filter(lambda x: x, list(map(lambda x: x.strip(), content)))))
+        content = '\n\n'.join(filter(lambda x: x, map(lambda x: x.strip(), content)))
         idx = content.rfind('网页版章节内容慢，请下载爱阅小说app阅读最新内容')
         if idx >= 0:
             content = content[0: idx]

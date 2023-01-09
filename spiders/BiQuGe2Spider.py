@@ -85,7 +85,7 @@ class BiQuGe2Spider(BaseRequestsSpider):
         selector = Selector(html)
         display_name = selector.xpath('//div[@id="neirong"]/h1/text()').get()
         content = selector.xpath('//div[@id="txt"]/text()').getall()
-        content = '\n\n'.join(list(filter(lambda x: x, list(map(lambda x: x.strip(), content)))))
+        content = '\n\n'.join(filter(lambda x: x, map(lambda x: x.strip(), content)))
         return Chapter(display_name=display_name, content=content, url='')
 
 

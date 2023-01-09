@@ -19,13 +19,13 @@ class TaskService(object):
         self.db_service = DBService()
         self.spiders = {
             'www.biquge7.top': BiQuGe1Spider(),
-            'www.biquge365.net': BiQuGe2Spider(),
-            'www.81zw.com': BaYiZhongWen1Spider(),
             'www.zwduxs.com': BaYiZhongWen2Spider(),
             'www.147xs.org': XiaoShuo147Spider(),
             'www.xgedaa.com': XiaoGeDaSpider(),
+            'www.biquge365.net': BiQuGe2Spider(),
             'www.aixs.la': AixsSpider(),
-            'www.xianqihaotianmi.com': YanQingXiaoShuoSpider()
+            'www.xianqihaotianmi.com': YanQingXiaoShuoSpider(),
+            'www.81zw.com': BaYiZhongWen1Spider(),
         }
 
     def chose_spider(self, url: str):

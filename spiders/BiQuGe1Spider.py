@@ -62,7 +62,7 @@ class BiQuGe1Spider(BaseRequestsSpider):
         selector = Selector(html)
         books = self._parse_hot_list(html)
         number = selector.xpath('//div[@class="page"]/text()').getall()
-        number = list(filter(lambda x: x, list(map(lambda x: x.strip(), number))))
+        number = list(filter(lambda x: x, map(lambda x: x.strip(), number)))
         current_page, total_page = number[0].split('/', maxsplit=1)
         return current_page, total_page, books
 
@@ -95,7 +95,7 @@ class BiQuGe1Spider(BaseRequestsSpider):
         selector = Selector(html)
         display_name = selector.xpath('//h1[@class="list_tit"]/text()').get()
         content = selector.xpath('//div[@class="text"]/text()').getall()
-        content = '\n\n'.join(list(filter(lambda x: x, list(map(lambda x: x.strip(), content)))))
+        content = '\n\n'.join(filter(lambda x: x, map(lambda x: x.strip(), content)))
         return Chapter(display_name=display_name, content=content, url='')
 
 

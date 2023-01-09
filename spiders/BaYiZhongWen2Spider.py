@@ -84,7 +84,7 @@ class BaYiZhongWen2Spider(BaseRequestsSpider):
         selector = Selector(html)
         content = selector.xpath('//div[@id="content"]/text()').getall()
         display_name = selector.xpath('//div[@class="bookname"]/h1/text()').get()
-        content = '\n\n'.join(list(filter(lambda x: x, list(map(lambda x: x.strip(), content)))))
+        content = '\n\n'.join(filter(lambda x: x, map(lambda x: x.strip(), content)))
         return Chapter(display_name=display_name, content=content, url='')
 
 

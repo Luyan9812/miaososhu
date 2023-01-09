@@ -106,8 +106,7 @@ class XiaoGeDaSpider(BaseRequestsSpider):
         delete_prefix = ['重大通知', '小疙瘩小说网', '手机支付宝', '阅读模式无法', '-->>', '本章未完，点击']
 
         content = map(lambda x: x and x.strip(), content)
-        content = filter(lambda x: x and not self.__startswith(x, delete_prefix), content)
-        content = '\n\n'.join(content)
+        content = '\n\n'.join(filter(lambda x: x and not self.__startswith(x, delete_prefix), content))
         return Chapter(display_name=display_name, content=content, url='')
 
     @staticmethod
