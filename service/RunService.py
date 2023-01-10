@@ -15,7 +15,7 @@ sites = {
 
 def main():
     task = TaskService()
-    books = task.search_all(keyword='诛仙')
+    books = task.search_all(keyword='偷偷藏不住')
     for book in books:
         print(f'《{book.book_name}》"{book.author_name}" 著；首页：{book.url}，封面图：{book.cover_img}', end='\n\n')
 

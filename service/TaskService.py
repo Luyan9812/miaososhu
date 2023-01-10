@@ -70,13 +70,19 @@ class TaskService(object):
             book = spider.scrape_book_index(url=book.url)
             spider.scrape_full_book(book=book, need_save=True)
 
-    def search_all(self, keyword, page=1):
+    def search_all(self, keyword, author='', page=1):
         """ 使用所有爬虫的搜索功能 """
         books = []
         for spider in self.spiders.values():
             _, _, tmp = spider.search(keyword=keyword, page=page)
             books.extend(tmp)
-        books = list(filter(lambda b: keyword in b.book_name, books))
+
+        def ftr(b):
+            if keyword not in b.book_name: return False
+            if author and author not in b.author_name: return False
+            return True
+
+        books = list(filter(ftr, books))
         for book in books:
             book.precise = len(keyword) / len(book.book_name)
         books.sort(key=lambda x: x.precise, reverse=True)
@@ -107,7 +113,12 @@ class TaskService(object):
 
 def main():
     url_dict = {
-        '校花之贴身高手': 'https://www.biquge7.top/35202'
+        '偷偷藏不住': 'https://www.147xs.org/book/89054/',
+        '龙族I：火之晨曦': 'https://www.biquge7.top/50901',
+        '龙族II：悼亡者之瞳': 'https://www.biquge7.top/50902',
+        '龙族III：黑月之潮': 'https://www.biquge7.top/50903',
+        '龙族IV：奥丁之渊': 'https://www.biquge7.top/50904',
+        '龙族V：悼亡者的归来': 'https://www.biquge7.top/50905',
     }
     task.scrape_book(url_dict=url_dict)
 
