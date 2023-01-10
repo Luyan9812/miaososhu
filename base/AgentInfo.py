@@ -14,7 +14,7 @@ cookies = {
                                      'Hm_lpvt_24a3dc4e64623585ab7f1feb3a998de9=1671626050 ',
     'spiders.BaYiZhongWen2Spider.BaYiZhongWen2': 'Hm_lvt_bbbf1a15e326c717507ed9c3a717e927=1671518193; '
                                                  'clickbids=111195; Hm_lpvt_bbbf1a15e326c717507ed9c3a717e927=1671633050',
-    'spiders.XiaoShuo147Spider.XiaoShuo147': '',
+    'spiders.XiaoShuo147Spider.XiaoShuo147': 'cf_clearance=4u6S3WQcOTVvQLOLTS_vcgkTEtlrQFDU8OBNm8_uPaM-1673338545-0-160',
     'spiders.XiaoGeDaSpider.XiaoGeDaSpider': 'PHPSESSID=tooqe2e16pu8sbd4tnf6orfr4r; '
                                              'Hm_lvt_74a6efae6937a14bde60bd85fadbdef0=1673108534; '
                                              'loadnum_49789_384=1; iushfuisb=b1372923; '

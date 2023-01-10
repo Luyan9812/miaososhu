@@ -15,10 +15,9 @@ sites = {
 
 def main():
     task = TaskService()
-    spider = task.spiders['www.biquge365.net']
-    books = spider.hot_list()
+    books = task.search_all(keyword='诛仙')
     for book in books:
-        print(f'《{book.book_name}》{book.author_name} 著；首页：{book.url}，封面图：{book.cover_img}', end='\n\n')
+        print(f'《{book.book_name}》"{book.author_name}" 著；首页：{book.url}，封面图：{book.cover_img}', end='\n\n')
 
 
 if __name__ == '__main__':

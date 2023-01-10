@@ -23,7 +23,7 @@ class XiaoShuo147Spider(BaseRequestsSpider):
 
     def headers(self):
         """ 网站请求头的封装 """
-        return {'User-Agent': Agent.USER_AGENT, 'referer': self.base_url}
+        return {'User-Agent': Agent.USER_AGENT, 'Cookie': Agent.cookies[self.tag], 'referer': self.base_url}
 
     def get_search_dict(self, keyword, page=1):
         """ 获取搜索键值对 """
