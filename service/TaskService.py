@@ -1,3 +1,4 @@
+import logging
 import requests
 
 from service.DBService import DBService
@@ -92,7 +93,8 @@ class TaskService(object):
                     if spider is None: continue
                     book = spider.scrape_book_index(url=url)
                     spider.scrape_full_book(book=book, need_save=True)
-                except requests.RequestException:
+                except requests.RequestException as e:
+                    logging.exception(e)
                     can_break = False
                     q_list.append(url)
             if can_break: break
@@ -101,26 +103,10 @@ class TaskService(object):
             q_list.clear()
 
 
-def _generate_download_dict():
-    urls = [
-        'https://www.biquge7.top/49909',
-    ]
-    download_dict = {}
-    for url in urls:
-        spider = task.chose_spider(url=url)
-        book = spider.scrape_book_index(url=url)
-        download_dict[book.book_name] = url
-    print(download_dict)
-
-
 def main():
     url_dict = {
-        '无光之月': 'https://www.aixs.la/book/166866.html',
-        '校花的贴身兵王': 'https://www.xianqihaotianmi.com/book/6035.html',
-        '校园绝品狂徒': 'https://www.xgedaa.com/a16747/',
         '校花之贴身高手': 'https://www.biquge7.top/35202'
     }
-    # _generate_download_dict()
     task.scrape_book(url_dict=url_dict)
 
 
