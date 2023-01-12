@@ -58,8 +58,8 @@ class TaskService(object):
                 continue
             print(book.book_name)
             print('\t', '\n\t'.join(list(book.catalogue.keys())[-10:]))
-            answer = input(f'《{book.book_name}》{"未" if is_finish else "已"}完结：')
-            if answer == '1': ids.append(book.book_id)
+            answer = input(f'《{book.book_name}》{book.update_time}{"未" if is_finish else "已"}完结？')
+            if answer: ids.append(book.book_id)
         for book_id in ids:
             self.db_service.update_book_by_id(book_id=book_id, data={'finish_status': 1 - is_finish})
 
@@ -113,7 +113,6 @@ class TaskService(object):
 
 def main():
     url_dict = {
-        '偷偷藏不住': 'https://www.147xs.org/book/89054/',
         '龙族I：火之晨曦': 'https://www.biquge7.top/50901',
         '龙族II：悼亡者之瞳': 'https://www.biquge7.top/50902',
         '龙族III：黑月之潮': 'https://www.biquge7.top/50903',
