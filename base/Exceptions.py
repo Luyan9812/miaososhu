@@ -1,7 +1,7 @@
-import pymysql.err
+from requests.exceptions import RequestException
 
 
-class StatusException(Exception):
+class StatusException(RequestException):
 
     def __init__(self, url: str, err_code: int):
         self.url = url

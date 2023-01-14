@@ -45,7 +45,10 @@ class BaseRequestsSpider(object):
 
     def fetch_post(self, url, data=None):
         """ 使用 post 方式获取网页代码 """
-        resp = requests.post(url, data=data, headers=self.headers())
+        try:
+            resp = requests.post(url, data=data, headers=self.headers())
+        except requests.exceptions.RequestException as e:
+            raise StatusException(url, e.errno)
         if resp.status_code != 200:
             raise StatusException(url, resp.status_code)
         resp.encoding = self.encoding

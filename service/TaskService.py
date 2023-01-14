@@ -74,8 +74,10 @@ class TaskService(object):
         """ 使用所有爬虫的搜索功能 """
         books = []
         for spider in self.spiders.values():
-            _, _, tmp = spider.search(keyword=keyword, page=page)
-            books.extend(tmp)
+            search_info = spider.search(keyword=keyword, page=page)
+            if not search_info: continue
+            _, _, tmp = search_info
+            if tmp: books.extend(tmp)
 
         def ftr(b):
             if keyword not in b.book_name: return False
