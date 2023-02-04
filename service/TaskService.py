@@ -72,7 +72,10 @@ class TaskService(object):
 
     def search_all(self, keyword, author='', page=1):
         """ 使用所有爬虫的搜索功能 """
-        books = []
+        books = self.db_service.query_book_like(kw=keyword)
+        for book in books:
+            book.book_name = f'数据库书籍：{book.book_name}'
+
         for spider in self.spiders.values():
             search_info = spider.search(keyword=keyword, page=page)
             if not search_info: continue
@@ -86,7 +89,7 @@ class TaskService(object):
 
         books = list(filter(ftr, books))
         for book in books:
-            book.precise = len(keyword) / len(book.book_name)
+            book.precise = -1 if '数据库书籍' in book.book_name else len(keyword) / len(book.book_name)
         books.sort(key=lambda x: x.precise, reverse=True)
         return books
 
@@ -115,11 +118,7 @@ class TaskService(object):
 
 def main():
     url_dict = {
-        '龙族I：火之晨曦': 'https://www.biquge7.top/50901',
-        '龙族II：悼亡者之瞳': 'https://www.biquge7.top/50902',
-        '龙族III：黑月之潮': 'https://www.biquge7.top/50903',
-        '龙族IV：奥丁之渊': 'https://www.biquge7.top/50904',
-        '龙族V：悼亡者的归来': 'https://www.biquge7.top/50905',
+        '间客': 'https://www.81zw.com/book/16931/',
     }
     task.scrape_book(url_dict=url_dict)
 
