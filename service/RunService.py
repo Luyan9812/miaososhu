@@ -15,13 +15,14 @@ sites = {
 
 
 def find_book():
-    books = task.search_all(keyword='龙族', author='江南')
+    books = task.search_all(keyword='间客', author='')
     for book in books:
         print(f'《{book.book_name}》"{book.author_name}" 著；首页：{book.url}，封面图：{book.cover_img}；简介：{book.info}', end='\n\n')
 
 
 def main():
     find_book()
+    # task.update_books()
 
 
 if __name__ == '__main__':

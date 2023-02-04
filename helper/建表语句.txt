@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS book(
     update_time VARCHAR(20),
     url VARCHAR(100),
     cover_img VARCHAR(100),
-    info VARCHAR(500)
+    info VARCHAR(2000)
 );
 
 CREATE TABLE IF NOT EXISTS book_type(
