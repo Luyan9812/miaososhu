@@ -1,1 +1,1 @@
-RESOURCE_DIR = 'static'
+RESOURCE_DIR = '/static'

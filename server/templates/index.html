@@ -23,10 +23,10 @@
 					{% for j in range(nitem) %}
 					{% set book = self_books[i * 3 + j] %}
 					<div class="book_box">
-						<img href="#" src="{{res}}/covers/{{book.book_name + '_' + book.author_name + '.jpg'}}"/>
+						<img href="/catalogue/{{book.book_id}}" src="{{res}}/covers/{{book.book_name + '_' + book.author_name + '.jpg'}}"/>
 						<div class="box_right">
 							<div class="box_head">
-								<a href="#">{{book.book_name}}</a>
+								<a href="/catalogue/{{book.book_id}}">{{book.book_name}}</a>
 								<p>{{book.author_name}}</p>
 								<div style="clear: both;"></div>
 							</div>

@@ -91,11 +91,11 @@ class DBService(object):
             books.append(book)
         return books
 
-    def query_book_by_id(self, book_id):
+    def query_book_by_id(self, book_id, need_catalogue=False):
         """ 根据 id 查找书籍 """
         condition = f'id={book_id} '
         row = self.db_helper.query_one(table_name=self.TABLE_BOOK, condition=condition)
-        book = self.__generate_book(row)
+        book = self.__generate_book(row, need_catalogue=need_catalogue)
         return book
 
     def query_book_by_author(self, author_name):

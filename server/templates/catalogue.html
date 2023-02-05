@@ -2,48 +2,32 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>《夜的命名术》目录</title>
-		<link rel="icon" href="img/miao.png" type="image/x-icon" />
-		<link rel="shortcut icon" href="img/miao.png" type="image/x-icon" /> 
-		<link rel="stylesheet" type="text/css" href="css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="css/catalogue.css"/>
+		<title>《{{book.book_name}}》目录</title>
+		<link rel="icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="shortcut icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/catalogue.css"/>
 	</head>
 	<body>
 		<div id="container">
 			
 			<!-- 头部开始 -->
-			<div class="header">
-				<div class="logo">
-					<img src="img/miao_big.png"/>
-					<img src="img/logo.png" style="height: 40px; margin-top: 5px;"/>
-				</div>
-				<div class="search">
-					<select id="search_type">
-						<option value="1">书名</option>
-						<option value="2">作者名</option>
-					</select>
-					<input id="input_kw" type="text" placeholder="键入关键字"/>
-					<div id="search_icon">
-						<img src="img/search.png"/>
-					</div>
-				</div>
-				<div style="clear: both;"></div>
-			</div>
+			{% include "header.html" %}
 			<!-- 头部结束 -->
 			
 			
 			<div class="book_head">
-				<img src="img/book_cover.jpg"/>
+				<img src="{{res}}/covers/{{book.book_name + '_' + book.author_name + '.jpg'}}"/>
 				<div class="head_right">
-					<h3>夜的命名术</h3>
+					<h3>{{book.book_name}}</h3>
 					<table>
 						<tr>
-							<td>作者：会说话的肘子</td>
-							<td>状态：完结</td>
+							<td>作者：{{book.author_name}}</td>
+							<td>状态：{{book.finish_describe[book.finish_status]}}</td>
 						</tr>
 						<tr>
-							<td>最后更新： 2022-12-13 22:14:00</td>
-							<td>最新章节：<a href="#">大结局</a></td>
+							<td>最后更新：{{book.update_time}}</td>
+							<td>最新章节：<a href="#">{{latest_chapter_name}}</a></td>
 						</tr>
 					</table>
 					<div class="op_btns">
@@ -55,21 +39,11 @@
 			</div>
 			<div class="book_info">
 				<p>内容简介：</p>
-				<p>
-					蓝与紫的霓虹中，浓密的钢铁苍穹下，数据洪流的前端，是科技革命之后的世界，也是现实与虚幻的分界。 
-					钢铁与身体，过去与未来。这里，表世界与里世界并存，面前的一切，像是时间之墙近在眼前。 黑暗逐渐笼罩。
-					可你要明白啊我的朋友，我们不能用温柔去应对黑暗，要用火。
-				</p>
+				<p>{{book.info}}</p>
 			</div>
 			<table class="book_catalogue">
 				<tr>
-					<td colspan="4">《夜的命名术》全部章节</td>
-				</tr>
-				<tr>
-					<td><a href="#">1、相等的人</a></td>
-					<td><a href="#">2、倒计时</a></td>
-					<td><a href="#">3、破碎的世界</a></td>
-					<td><a href="#">4、不止一个</a></td>
+					<td colspan="4">《{{book.book_name}}》全部章节</td>
 				</tr>
 				<tr>
 					<td><a href="#">1、相等的人</a></td>
@@ -81,19 +55,12 @@
 			
 			
 			<!-- 尾部开始 -->
-			<p class="friends">
-				友情链接：
-				<a href="#">笔趣阁小说网</a>
-				<a href="#">星空小说网</a>
-			<p>
-				
-			<p class="shuoming">本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
-			<p class="shuoming">如有侵权，联系我们：luyan9812@163.com</p>
+			{% include "footer.html" %}
 			<!-- 尾部结束 -->
 			
 		</div>
-		<script src="js/jquery-3.4.1.min.js"></script>
-		<script src="js/common.js"></script>
-		<script src="js/catalogue.js"></script>
+		<script src="{{res}}/js/jquery-3.4.1.min.js"></script>
+		<script src="{{res}}/js/common.js"></script>
+		<script src="{{res}}/js/catalogue.js"></script>
 	</body>
 </html>
