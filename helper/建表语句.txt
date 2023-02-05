@@ -30,3 +30,10 @@ CREATE TABLE IF NOT EXISTS chapter(
     display_name VARCHAR(100),
     content TEXT
 );
+
+CREATE TABLE IF NOT EXISTS daily_recommendation (
+	id INT auto_increment PRIMARY KEY,
+	book_id INT,
+	recommend_date VARCHAR(20),
+	resource INT
+);

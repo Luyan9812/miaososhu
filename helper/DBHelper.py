@@ -82,9 +82,10 @@ class MysqlHelper(object):
         except pymysql.err.Error as e:
             logging.exception(e)
 
-    def query_one(self, table_name, condition, order_by=None, limit=None):
+    def query_one(self, table_name, condition, order_by=None, limit=None, fields=None):
         """ 查询一条数据 """
-        sql = f'SELECT * FROM {table_name} WHERE {condition} '
+        qf = ','.join(fields) if fields else '*'
+        sql = f'SELECT {qf} FROM {table_name} WHERE {condition} '
         if order_by:
             sql += f'ORDER BY {order_by} '
         if limit:

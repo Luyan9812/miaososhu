@@ -1,3 +1,4 @@
+import requests.exceptions
 from requests.exceptions import RequestException
 
 
@@ -17,5 +18,7 @@ def self_catch(func):
             return func(*args, **kwargs)
         except StatusException as e:
             print(e)
+        except requests.exceptions.RequestException as e:
+            print(e.errno)
     return wrapper
 

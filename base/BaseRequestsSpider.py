@@ -91,7 +91,7 @@ class BaseRequestsSpider(object):
         if not self.service.should_scrape(book):
             print('书籍来源不匹配，不予爬取')
             return None
-        book_id = self.service.save_book(book)
+        book_id, _ = self.service.save_book(book)
         rows = self.service.query_catalogue_by_bookid_without_cid(book_id=book_id)
         chapter_names = list(map(lambda x: x[0], rows))
         for i, ch in enumerate(book.catalogue.items(), start=1):

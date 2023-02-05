@@ -25,6 +25,7 @@ class Book(object):
         self.info = info.strip()
         self.book_name = book_name.strip()
         self.book_type = book_type.strip()
+        if not self.book_type: self.book_type = '未知'
         self.author_name = author_name.strip()
         self.update_time = update_time.strip()
         self.cover_img = cover_img

@@ -16,6 +16,7 @@ class DBService(object):
         self.TABLE_BOOK = 'book'
         self.TABLE_CHAPTER = 'chapter'
         self.TABLE_CATALOGUE = 'catalogue'
+        self.TABLE_DAILY_RECOMMENDATION = 'daily_recommendation'
 
     def __on_check(self):
         """ 检查表是否存在 """
@@ -57,7 +58,7 @@ class DBService(object):
         type_id = self.db_helper.insert(table_name='book_type', data=data)
         return type_id
 
-    def __generate_book(self, row: tuple):
+    def __generate_book(self, row: tuple, need_catalogue=False):
         """ 查询出来的元组生成 Book 对象 """
         if not row: return None
         book_id, book_name, author_name, book_type_id, finish_status, update_time, url, cover_img, info = row
@@ -65,9 +66,10 @@ class DBService(object):
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time, book_type=book_type[1],
                     info=info, finish_status=finish_status, url=url, cover_img=cover_img, book_id=book_id)
         catalogue = {}
-        for row in self.query_catalogue_by_book_id(book_id=book_id):
-            _, _, _, chapter_name, chapter_url = row
-            catalogue[chapter_name] = chapter_url
+        if need_catalogue:
+            for row in self.query_catalogue_by_book_id(book_id=book_id):
+                _, _, _, chapter_name, chapter_url = row
+                catalogue[chapter_name] = chapter_url
         book.catalogue = catalogue
         book.total_chapter = len(catalogue)
         book.current_chapter = self.count_chapter(book_id=book_id)
@@ -107,19 +109,24 @@ class DBService(object):
 
     def query_all_books(self):
         """ 查询所有书籍 """
-        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK, 
+        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK,
                                                  condition='1=1 ', converter=self.__generate_book)
+
+    def query_all_books_id(self):
+        """ 查询所有本站书籍的id """
+        condition = 'book_type_id != 18 '
+        return self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition, fields=['id'])
 
     def query_book_by_finish_status(self, is_finish):
         """ 根据完结状态查询书籍 """
         condition = f'finish_status={is_finish} '
-        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK, 
+        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK,
                                                  condition=condition, converter=self.__generate_book)
 
     def query_book_by_website(self, baseurl):
         """ 根据所属网站查询书籍 """
         condition = f'url LIKE "{baseurl}%" '
-        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK, 
+        yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK,
                                                  condition=condition, converter=self.__generate_book)
 
     def update_book_by_id(self, book_id, data: dict):
@@ -146,9 +153,10 @@ class DBService(object):
             data['book_type_id'] = type_id
             book_id = self.db_helper.insert(table_name=self.TABLE_BOOK, data=data)
             book.book_id = book_id
-        else: book.book_id = book_id = b.book_id
+        else:
+            book.book_id = book_id = b.book_id
         self.save_catalogues(book)
-        return book_id
+        return book_id, not b
 
     def count_catalogue(self, book_id):
         """ 根据书籍 id 统计目录条数 """
@@ -199,7 +207,8 @@ class DBService(object):
         chapter_id, book_id, order_id, display_name, content = row
         chapter = Chapter(display_name=display_name, content=content, url='', chapter_id=chapter_id, order_id=order_id)
         catalogue = self.query_catalogue_by_chapter_id(chapter_id)
-        if catalogue: chapter.url = catalogue[4]
+        if catalogue:
+            chapter.url = catalogue[4]
         else:
             logging.error('Here is error!')
         return chapter
@@ -213,7 +222,7 @@ class DBService(object):
         """ 根据书籍 id 获取章节 """
         chapters = []
         condition = f'book_id={book_id} '
-        for row in self.db_helper.query_list(table_name=self.TABLE_CHAPTER, 
+        for row in self.db_helper.query_list(table_name=self.TABLE_CHAPTER,
                                              condition=condition, order_by='order_id', limit=limit):
             chapter = self.__generate_chapter(row)
             chapters.append(chapter)
@@ -254,15 +263,40 @@ class DBService(object):
             data = {'book_id': book_id, 'order_id': chapter.order_id,
                     'display_name': chapter.display_name, 'content': chapter.content}
             chapter_id = self.db_helper.insert(table_name=self.TABLE_CHAPTER, data=data)
-        else: chapter_id = ch.chapter_id
+        else:
+            chapter_id = ch.chapter_id
         data = {'chapter_id': chapter_id}
         self.update_catalogue_by_bid_cname(book_id=book_id, chapter_name=chapter.display_name, data=data)
         return chapter_id
 
+    def query_commend_by_id(self, comm_id):
+        """ 根据 id 查询每日推荐 """
+        condition = f'id={comm_id} '
+        row = self.db_helper.query_one(table_name=self.TABLE_DAILY_RECOMMENDATION, condition=condition)
+        return {'id': row[0], 'book_id': row[1], 'recommend_date': row[2], 'resource': row[3]}
+
+    def query_commend_by_date(self, recommend_date, resource):
+        """
+        根据日期和来源查询每日推荐
+        :param recommend_date: 日期
+        :param resource: 来源。0-本站资源，1-外站资源
+        :return 当前日期、来源的推荐书籍的 id 列表
+        """
+        condition = f'recommend_date={recommend_date} AND resource={resource} '
+        rows = self.db_helper.query_list(table_name=self.TABLE_DAILY_RECOMMENDATION,
+                                         condition=condition, fields=['book_id'])
+        return list(map(lambda x: x[0], rows)) if rows else []
+
+    def save_commend(self, book_id, recommend_date, resource):
+        """ 保存一条每日推荐 """
+        data = {'book_id': book_id, 'recommend_date': recommend_date, 'resource': resource}
+        com_id = self.db_helper.insert(table_name=self.TABLE_DAILY_RECOMMENDATION, data=data)
+        return com_id
+
 
 def main():
     service = DBService()
-    chapters = service.query_catalogue_by_bookid_without_cid(book_id=1)
+    chapters = service.query_commend_by_date(recommend_date='2023-2-5', resource=0)
     print(chapters)
 
 

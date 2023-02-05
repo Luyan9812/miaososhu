@@ -18,6 +18,16 @@
 	box-sizing: border-box;
 }
 
+.group_name>p {
+	float: left;
+}
+
+.group_name>img {
+	width: 40px;
+	height: 40px;
+	margin-left: 20px;
+}
+
 .book_line {
 	width: 100%;
 	height: 180px;
