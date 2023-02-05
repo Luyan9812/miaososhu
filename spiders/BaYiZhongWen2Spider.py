@@ -1,6 +1,7 @@
 from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from parsel.selector import Selector
 from base.BaseRequestsSpider import BaseRequestsSpider
 
@@ -68,11 +69,11 @@ class BaYiZhongWen2Spider(BaseRequestsSpider):
         info = selector.xpath('//div[@id="intro"]/p[1]/text()').get()
         book_type = selector.xpath('//div[@class="con_top"]/a[2]/text()').get()
         update_time = div_info.xpath('./p[3]/text()').get().replace('最后更新：', '')
-        catalogue = {}
+        catalogue = []
         for dd in selector.xpath('//div[@id="list"]/dl/dd'):
             ch_name = dd.xpath('./a/text()').get()
             href = urljoin(self.base_url, dd.xpath('./a/@href').get())
-            catalogue[ch_name] = href
+            catalogue.append(Catalogue(chapter_name=ch_name, chapter_url=href))
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time,
                     book_type=book_type, info=info, finish_status=finish_status, url='', cover_img=cover_img)
         book.catalogue = catalogue

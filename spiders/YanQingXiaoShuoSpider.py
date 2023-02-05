@@ -1,6 +1,7 @@
 from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from parsel.selector import Selector
 from base.BaseRequestsSpider import BaseRequestsSpider
 
@@ -69,11 +70,11 @@ class YanQingXiaoShuoSpider(BaseRequestsSpider):
         info = selector.xpath('//div[@class="info2"]//p/text()').get()
         author_name = selector.xpath('//h3/text()').get().replace('作者:', '')
         cover_img = urljoin(self.base_url, selector.xpath('//div[@class="info1"]/img/@src').get())
-        catalogue = {}
+        catalogue = []
         for li in selector.xpath('//div[@class="panel-body"]/ul[contains(@class, "list-charts")]//li'):
             ch_name = li.xpath('./a/text()').get()
             href = urljoin(self.base_url, li.xpath('./a/@href').get())
-            catalogue[ch_name] = href
+            catalogue.append(Catalogue(chapter_name=ch_name, chapter_url=href))
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time,
                     book_type=book_type, info=info, finish_status=finish_status, url='', cover_img=cover_img)
         book.catalogue = catalogue

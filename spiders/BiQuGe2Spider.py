@@ -1,6 +1,7 @@
 from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from parsel.selector import Selector
 from base.BaseRequestsSpider import BaseRequestsSpider
 
@@ -71,11 +72,11 @@ class BiQuGe2Spider(BaseRequestsSpider):
         book_name = selector.xpath('//div[@class="right_border"]/h1/text()').get()
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time,
                     book_type=book_type, info=info, finish_status=finish_status, url='', cover_img=cover_img)
-        catalogue = {}
+        catalogue = []
         for li in selector.xpath('//div[@class="border"]/ul/li'):
             ch_name = li.xpath('./a/text()').get()
             href = urljoin(self.base_url, li.xpath('./a/@href').get())
-            catalogue[ch_name] = href
+            catalogue.append(Catalogue(chapter_name=ch_name, chapter_url=href))
         book.catalogue = catalogue
         book.total_chapter = len(catalogue)
         return book

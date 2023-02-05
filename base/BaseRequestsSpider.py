@@ -94,8 +94,8 @@ class BaseRequestsSpider(object):
         book_id, _ = self.service.save_book(book)
         rows = self.service.query_catalogue_by_bookid_without_cid(book_id=book_id)
         chapter_names = list(map(lambda x: x[0], rows))
-        for i, ch in enumerate(book.catalogue.items(), start=1):
-            ch_name, ch_url = ch
+        for i, ch in enumerate(book.catalogue, start=1):
+            ch_name, ch_url = ch.chapter_name, ch.chapter_url
             if ch_name not in chapter_names: continue
             turn += 1
             print(f'《{book.book_name}》\t{i}/{book.total_chapter}', end='')

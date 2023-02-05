@@ -3,6 +3,7 @@ import base.AgentInfo as Agent
 from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from parsel.selector import Selector
 from base.Exceptions import self_catch
 from base.BaseRequestsSpider import BaseRequestsSpider
@@ -79,11 +80,11 @@ class BiQuGe1Spider(BaseRequestsSpider):
         finish_status = 1 if finish == '完结' else 0
         update_time = tits.xpath('./div[@class="up"]/span[3]/span/text()').get()
         book_type = selector.xpath('//div[@class="navi"]/div/a[2]/text()').get()
-        catalogue = {}
+        catalogue = []
         for li in selector.xpath('//div[@class="list"]/ul/li'):
             href = urljoin(self.base_url, li.xpath('./a/@href').get())
             ch_name = li.xpath('./a/text()').get()
-            catalogue[ch_name] = href
+            catalogue.append(Catalogue(chapter_name=ch_name, chapter_url=href))
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time,
                     book_type=book_type, info=info, finish_status=finish_status, url='', cover_img=cover_img)
         book.catalogue = catalogue

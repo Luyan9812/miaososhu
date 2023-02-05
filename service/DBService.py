@@ -4,6 +4,7 @@ import helper.ListHelper as ListHelper
 
 from model.Book import Book
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from helper.DBHelper import MysqlHelper
 
 
@@ -65,11 +66,12 @@ class DBService(object):
         book_type = self.query_type_by_id(book_type_id)
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time, book_type=book_type[1],
                     info=info, finish_status=finish_status, url=url, cover_img=cover_img, book_id=book_id)
-        catalogue = {}
+        catalogue = []
         if need_catalogue:
             for row in self.query_catalogue_by_book_id(book_id=book_id):
-                _, _, _, chapter_name, chapter_url = row
-                catalogue[chapter_name] = chapter_url
+                catalogue_id, book_id, chapter_id, chapter_name, chapter_url = row
+                catalogue.append(Catalogue(chapter_name=chapter_name, chapter_url=chapter_url,
+                                           catalogue_id=catalogue_id, book_id=book_id, chapter_id=chapter_id))
         book.catalogue = catalogue
         book.total_chapter = len(catalogue)
         book.current_chapter = self.count_chapter(book_id=book_id)
@@ -198,8 +200,8 @@ class DBService(object):
 
     def save_catalogues(self, book: Book):
         """ 存储一本书的目录 """
-        for k, v in book.catalogue.items():
-            self.save_catalogue_one(book_id=book.book_id, chapter_name=k, chapter_url=v)
+        for item in book.catalogue:
+            self.save_catalogue_one(book_id=book.book_id, chapter_name=item.chapter_name, chapter_url=item.chapter_url)
 
     def __generate_chapter(self, row):
         """ 查询出来的元组生成 Chapter 对象 """

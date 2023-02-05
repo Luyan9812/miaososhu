@@ -57,7 +57,7 @@ class TaskService(object):
                 print('GET None')
                 continue
             print(book.book_name)
-            print('\t', '\n\t'.join(list(book.catalogue.keys())[-10:]))
+            print('\t', '\n\t'.join(map(lambda x: x.chapter_name, book.catalogue[-10:])))
             answer = input(f'《{book.book_name}》{book.update_time}{"未" if is_finish else "已"}完结？')
             if answer: ids.append(book.book_id)
         for book_id in ids:

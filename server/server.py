@@ -39,9 +39,8 @@ def catalogue(book_id):
     render_dict = {
         'res': RES,
         'book': book,
-        'latest_chapter_name': list(book.catalogue.keys())[-1]
+        'latest_chapter_name': book.catalogue[-1].chapter_name
     }
-
     return render_template('catalogue.html', **render_dict)
 
 

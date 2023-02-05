@@ -1,6 +1,7 @@
 from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from parsel.selector import Selector
 from base.BaseRequestsSpider import BaseRequestsSpider
 
@@ -69,13 +70,13 @@ class AixsSpider(BaseRequestsSpider):
         book_name = selector.xpath('//span[@class="name fl"]/text()').get()
         author_name = selector.xpath('//a[@class="author fl"]/text()').get()
         book_type = selector.xpath('//div[contains(@class, "path")]/a[2]/text()').get()
-        catalogue = {}
+        catalogue = []
         div = selector.xpath('//ul[@id="listsss"]/div')
         div.sort(key=lambda x: int(x.xpath('./@data-id').get()))
         for li in div.xpath('./li'):
             ch_name = li.xpath('./a/text()').get()
             href = urljoin(sub_url, li.xpath('./a/@href').get())
-            catalogue[ch_name] = href
+            catalogue.append(Catalogue(chapter_name=ch_name, chapter_url=href))
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time,
                     book_type=book_type, info=info, finish_status=finish_status, url='', cover_img=cover_img)
         book.catalogue = catalogue

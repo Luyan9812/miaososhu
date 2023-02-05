@@ -1,6 +1,7 @@
 from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from parsel.selector import Selector
 from base.Exceptions import self_catch
 from base.BaseRequestsSpider import BaseRequestsSpider
@@ -84,11 +85,11 @@ class XiaoGeDaSpider(BaseRequestsSpider):
         author_name = selector.xpath('//div[@class="msg"]/em[1]/a/text()').get()
         book_type = selector.xpath('//div[@class="rt"]/div[2]/a/text()').get().strip()
         update_time = selector.xpath('//div[@class="msg"]/em[3]/text()').get().replace('更新时间：', '')
-        catalogue = {}
+        catalogue = []
         for li in selector.xpath('//div[@class="mulu"][2]/ul/li'):
             ch_name = li.xpath('./a/text()').get().strip()
             href = urljoin(self.base_url, li.xpath('./a/@href').get())
-            catalogue[ch_name] = urljoin(self.base_url, href)
+            catalogue.append(Catalogue(chapter_name=ch_name, chapter_url=urljoin(self.base_url, href)))
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time,
                     book_type=book_type, info=info, finish_status=finish_status, url='', cover_img=cover_img)
         book.catalogue = catalogue

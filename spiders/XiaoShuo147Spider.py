@@ -3,6 +3,7 @@ import base.AgentInfo as Agent
 from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from parsel.selector import Selector
 from base.BaseRequestsSpider import BaseRequestsSpider
 
@@ -78,12 +79,12 @@ class XiaoShuo147Spider(BaseRequestsSpider):
         finish_status = 1 if finish == 'a' else 0
         book_type = selector.xpath('//div[@class="con_top"]/a[2]/text()').get()
         cover_img = urljoin(self.base_url, selector.xpath('//div[@id="fmimg"]/img/@src').get())
-        catalogue = {}
+        catalogue = []
         for dd in selector.xpath('//div[@id="list"]/dl/dd'):
             a = dd.xpath('./a')
             ch_name = a.xpath('./text()').get()
             href = urljoin(self.base_url, a.xpath('./@href').get())
-            catalogue[ch_name] = href
+            catalogue.append(Catalogue(chapter_name=ch_name, chapter_url=href))
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time,
                     book_type=book_type, info=info, finish_status=finish_status, url='', cover_img=cover_img)
         book.catalogue = catalogue

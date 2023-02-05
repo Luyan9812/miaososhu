@@ -3,6 +3,7 @@ import math
 from model.Book import Book
 from urllib.parse import urljoin
 from model.Chapter import Chapter
+from model.Catalogue import Catalogue
 from parsel.selector import Selector
 from base.Exceptions import self_catch
 from base.BaseRequestsSpider import BaseRequestsSpider
@@ -93,12 +94,12 @@ class BaYiZhongWen1Spider(BaseRequestsSpider):
         update_time = div_info.xpath('./p[3]/text()').get().replace('最后更新：', '')
         info = selector.xpath('//div[@id="intro"]/p[1]/text()').get()
         book_type = selector.xpath('//div[@class="con_top"]/a[2]/text()').get()
-        catalogue = {}
+        catalogue = []
         for dd in selector.xpath('//div[@id="list"]/dl/dd'):
             href = dd.xpath('./a/@href').get()
             ch_name = dd.xpath('./a/text()').get()
             if ch_name is None: continue
-            catalogue[ch_name] = urljoin(self.base_url, href)
+            catalogue.append(Catalogue(chapter_name=ch_name, chapter_url=urljoin(self.base_url, href)))
         book = Book(book_name=book_name, author_name=author_name, update_time=update_time,
                     book_type=book_type, info=info, finish_status=finish_status, url='', cover_img=cover_img)
         book.catalogue = catalogue

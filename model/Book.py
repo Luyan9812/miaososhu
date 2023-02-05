@@ -32,7 +32,7 @@ class Book(object):
         self.finish_status = finish_status
 
         # 目录的键值对是"章节名：章节链接"
-        self.catalogue = {}
+        self.catalogue = []
         self.chapter_list = []
         self.total_chapter = 0
         self.current_chapter = 0
@@ -46,7 +46,7 @@ class Book(object):
 
     def get_latest_chapter_name(self):
         """ 获取最新章节的名称 """
-        return self.catalogue[-1] if len(self.catalogue) > 0 else ''
+        return self.catalogue[-1].chapter_name if len(self.catalogue) > 0 else ''
 
     def get_finish_status_info(self):
         return self.finish_describe.get(self.finish_status, '未知')
