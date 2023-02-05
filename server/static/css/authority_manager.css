@@ -1,0 +1,77 @@
+.user {
+	height: 40px;
+	margin-top: 4px;
+	float: right;
+}
+
+.user>p {
+	height: 100%;
+	line-height: 40px;
+	float: left;
+	margin-right: 20px;
+}
+
+.user>img {
+	width: 30px;
+	height: 30px;
+	margin-top: 5px;
+	float: left;
+}
+
+.p_add {
+	height: 30px;
+	text-align: right;
+}
+
+#random_add {
+	margin-right: 20px;
+}
+
+table {
+	width: 100%;
+	height: fit-content;
+	margin: auto;
+	margin-top: 30px;
+	border: 3px solid #89c6e5;
+	border-collapse: collapse;
+}
+
+tr:first-child {
+	height: 40px;
+	font-weight: bold;
+	background-color: #c3dfea;
+	border: none;
+}
+
+tr {
+	height: 35px;
+	border-bottom: 1px dashed #cccccc;
+}
+
+td {
+	width: 33%;
+	height: 100%;
+	text-align: center;
+}
+
+tr>td:last-child {
+	width: 34%;
+}
+
+td>input {
+	width: 100px;
+	height: 25px;
+	border: none;
+	outline: none;
+	font-size: 16px;
+	text-align: center;
+}
+
+.td_op>img {
+	width: 25px;
+	height: 25px;
+}
+
+.td_op>img:first-child {
+	margin-right: 10px;
+}
