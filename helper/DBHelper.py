@@ -1,3 +1,4 @@
+import time
 import pymysql
 import logging
 
@@ -61,10 +62,11 @@ class MysqlHelper(object):
             logging.exception(e)
             self.db.rollback()
 
-    def query_list(self, table_name, condition, order_by=None, limit=None):
+    def query_list(self, table_name, condition, order_by=None, limit=None, fields=None):
         """ 查询数据，返回列表 """
         array = []
-        sql = f'SELECT * FROM {table_name} WHERE {condition} '
+        qf = ','.join(fields) if fields else '*'
+        sql = f'SELECT {qf} FROM {table_name} WHERE {condition} '
         if order_by:
             sql += f'ORDER BY {order_by} '
         if limit:
@@ -113,10 +115,14 @@ class MysqlHelper(object):
 
 
 def main():
+    total_time = 0
     helper = MysqlHelper(dbname='miao_novel')
-    condition = 'url LIKE "https://www.81zw.com%" '
-    cnt = helper.count(table_name='book', condition=condition)
-    print(cnt)
+    for i in range(50):
+        begin = time.time()
+        helper.query_list('catalogue', 'book_id=1 ')
+        end = time.time()
+        total_time += (end - begin)
+    print(total_time / 50)
     helper.onclose()
 
 

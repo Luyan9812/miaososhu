@@ -92,8 +92,8 @@ class BaseRequestsSpider(object):
             print('书籍来源不匹配，不予爬取')
             return None
         book_id = self.service.save_book(book)
-        rows = self.service.query_catalogue_by_book_id(book_id=book_id)
-        chapter_names = list(map(lambda x: x[3], filter(lambda x: not x[2] or x[2] < 0, rows)))
+        rows = self.service.query_catalogue_by_bookid_without_cid(book_id=book_id)
+        chapter_names = list(map(lambda x: x[0], rows))
         for i, ch in enumerate(book.catalogue.items(), start=1):
             ch_name, ch_url = ch
             if ch_name not in chapter_names: continue

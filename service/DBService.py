@@ -166,6 +166,11 @@ class DBService(object):
         return self.db_helper.query_list(table_name=self.TABLE_CATALOGUE,
                                          condition=condition, order_by=order_by, limit=limit)
 
+    def query_catalogue_by_bookid_without_cid(self, book_id, order_by=None, limit=None):
+        condition = f'book_id={book_id} AND (chapter_id IS NULL OR chapter_id<0) '
+        return self.db_helper.query_list(table_name=self.TABLE_CATALOGUE,
+                                         condition=condition, order_by=order_by, limit=limit, fields=['chapter_name'])
+
     def query_catalogue_by_chapter_id(self, chapter_id):
         """ 根据章节 id 查询目录 """
         condition = f'chapter_id={chapter_id} '
@@ -257,7 +262,7 @@ class DBService(object):
 
 def main():
     service = DBService()
-    chapters = service.query_chapter_by_bookid(book_id=1)
+    chapters = service.query_catalogue_by_bookid_without_cid(book_id=1)
     print(chapters)
 
 
