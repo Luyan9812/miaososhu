@@ -1,4 +1,6 @@
 import json
+import math
+
 from final import RESOURCE_DIR as RES
 from flask import Flask, render_template
 from service.ServerService import ServerService
@@ -39,6 +41,9 @@ def catalogue(book_id):
     render_dict = {
         'res': RES,
         'book': book,
+        'lines': math.ceil(len(book.catalogue) / 4),
+        'last_items': len(book.catalogue) % 4 if len(book.catalogue) % 4 else 4,
+        'latest_chapter_id': book.catalogue[-1].chapter_id,
         'latest_chapter_name': book.catalogue[-1].chapter_name
     }
     return render_template('catalogue.html', **render_dict)

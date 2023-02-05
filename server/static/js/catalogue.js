@@ -1,5 +1,5 @@
 $('#btn_download').click(function() {
-	console.log('download');
+	window.open($(this).attr('href'));
 });
 
 $('#btn_save').click(function() {
@@ -7,5 +7,6 @@ $('#btn_save').click(function() {
 });
 
 $('#btn_read').click(function() {
-	console.log('read');
+	let chapter_id = $(this).attr('ch_id');
+	location.href = '/chapter/' + chapter_id;
 });

@@ -27,13 +27,13 @@
 						</tr>
 						<tr>
 							<td>最后更新：{{book.update_time}}</td>
-							<td>最新章节：<a href="#">{{latest_chapter_name}}</a></td>
+							<td>最新章节：<a href="/chapter/latest_chapter_id">{{latest_chapter_name}}</a></td>
 						</tr>
 					</table>
 					<div class="op_btns">
-						<button id="btn_download" class="op_btn blue">下载</button>
+						<button href="{{res}}/epub/{{book.book_name + '_' + book.author_name + '.epub'}}" id="btn_download" class="op_btn blue">下载</button>
 						<!-- <button id="btn_save" class="op_btn green">转载</button> -->
-						<button id="btn_read" class="op_btn oriange">开始阅读</button>
+						<button ch_id="{{book.catalogue[0].chapter_id}}" id="btn_read" class="op_btn oriange">开始阅读</button>
 					</div>
 				</div>
 			</div>
@@ -45,12 +45,16 @@
 				<tr>
 					<td colspan="4">《{{book.book_name}}》全部章节</td>
 				</tr>
+				{% for i in range(lines) %}
 				<tr>
-					<td><a href="#">1、相等的人</a></td>
-					<td><a href="#">2、倒计时</a></td>
-					<td><a href="#">3、破碎的世界</a></td>
-					<td><a href="#">4、不止一个</a></td>
+					{% with n = last_items if loop.index0 == lines - 1 else 4 %}
+					{% for j in range(n) %}
+					{% set k = i * 4 + j %}
+					<td><a href="/chapter/{{book.catalogue[k].chapter_id}}">{{book.catalogue[k].chapter_name}}</a></td>
+					{% endfor %}
+					{% endwith %}
 				</tr>
+				{% endfor %}
 			</table>
 			
 			
