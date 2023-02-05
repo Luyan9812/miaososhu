@@ -207,7 +207,8 @@ class DBService(object):
         """ 查询出来的元组生成 Chapter 对象 """
         if not row: return None
         chapter_id, book_id, order_id, display_name, content = row
-        chapter = Chapter(display_name=display_name, content=content, url='', chapter_id=chapter_id, order_id=order_id)
+        chapter = Chapter(display_name=display_name, content=content, url='',
+                          chapter_id=chapter_id, order_id=order_id, book_id=book_id)
         catalogue = self.query_catalogue_by_chapter_id(chapter_id)
         if catalogue:
             chapter.url = catalogue[4]

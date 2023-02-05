@@ -2,11 +2,11 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>1、相等的人_夜的命名术</title>
-		<link rel="icon" href="img/miao.png" type="image/x-icon" />
-		<link rel="shortcut icon" href="img/miao.png" type="image/x-icon" /> 
-		<link rel="stylesheet" type="text/css" href="css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="css/reading.css"/>
+		<title>{{chapter.display_name}}_{{book_name}}</title>
+		<link rel="icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="shortcut icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/reading.css"/>
 	</head>
 	<body>
 		<div id="container">
@@ -17,42 +17,21 @@
 			
 			
 			<div class="content">
-				<div class="content_title">1、相等的人</div>
+				<div class="content_title">{{chapter.display_name}}</div>
 				<div class="content_ops">
-					<button class="content_op btn_up">上一章</button>
-					<button class="content_op btn_catalogue">章节列表</button>
-					<button class="content_op btn_down">下一章</button>
+					<button data-id="{{pre_id}}" class="content_op btn_up">上一章</button>
+					<button data-id="{{book_id}}" class="content_op btn_catalogue">章节列表</button>
+					<button data-id="{{after_id}}" class="content_op btn_down">下一章</button>
 				</div>
-				
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
-				<p>2022年，秋。</p>
-				<p>雨棚之外的全世界灰暗，地面都被雨水沁成了浅黑色，只有雨棚下的地面还留着一片干燥地带，就像是整个世界都只剩下这一块净土。</p>
+
+				{% for sentence in chapter.content.split() %}
+				<p>{{sentence}}</p>
+				{% endfor %}
 				
 				<div class="content_ops">
-					<button class="content_op btn_up">上一章</button>
-					<button class="content_op btn_catalogue">章节列表</button>
-					<button class="content_op btn_down">下一章</button>
+					<button data-id="{{pre_id}}" class="content_op btn_up">上一章</button>
+					<button data-id="{{book_id}}" class="content_op btn_catalogue">章节列表</button>
+					<button data-id="{{after_id}}" class="content_op btn_down">下一章</button>
 				</div>
 			</div>
 			
@@ -62,8 +41,11 @@
 			<!-- 尾部结束 -->
 			
 		</div>
-		<script src="js/jquery-3.4.1.min.js"></script>
-		<script src="js/common.js"></script>
-		<script src="js/reading.js"></script>
+		<script src="{{res}}/js/jquery-3.4.1.min.js"></script>
+		<script src="{{res}}/js/common.js"></script>
+		<script src="{{res}}/js/reading.js"></script>
+		<script>
+			hideBtn();
+		</script>
 	</body>
 </html>

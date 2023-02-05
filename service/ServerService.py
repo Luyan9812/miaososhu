@@ -48,7 +48,6 @@ class ServerService(object):
             books.append(self.dbService.query_book_by_id(book_id=book_id))
         return books
 
-
     def get_other_recommends(self):
         """ 获取外站当日的推荐书籍 """
         books = []

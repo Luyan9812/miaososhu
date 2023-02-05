@@ -7,11 +7,12 @@ class Chapter(object):
     self.chapter_index: 章节数
     self.chapter_name: 不带章节数的名称
     """
-    def __init__(self, display_name: str, content: str, url: str, chapter_id=-1, order_id=-1):
+    def __init__(self, display_name: str, content: str, url: str, chapter_id=-1, order_id=-1, book_id=-1):
         self.url = url
         self.content = content
         self.order_id = order_id
         self.chapter_id = chapter_id
+        self.book_id = book_id
         self.display_name = display_name.strip()
 
     def __str__(self):

@@ -3,6 +3,7 @@ import math
 
 from final import RESOURCE_DIR as RES
 from flask import Flask, render_template
+from service.DBService import DBService
 from service.ServerService import ServerService
 
 
@@ -36,8 +37,8 @@ def other_novels():
 
 @app.route('/catalogue/<int:book_id>')
 def catalogue(book_id):
-    service = ServerService()
-    book = service.dbService.query_book_by_id(book_id=book_id, need_catalogue=True)
+    service = DBService()
+    book = service.query_book_by_id(book_id=book_id, need_catalogue=True)
     render_dict = {
         'res': RES,
         'book': book,
@@ -47,6 +48,26 @@ def catalogue(book_id):
         'latest_chapter_name': book.catalogue[-1].chapter_name
     }
     return render_template('catalogue.html', **render_dict)
+
+
+@app.route('/chapter/<int:chapter_id>')
+def chapter(chapter_id):
+    service = DBService()
+    ch = service.query_chapter_by_id(chapter_id=chapter_id)
+    book = service.query_book_by_id(book_id=ch.book_id, need_catalogue=True)
+    for i, item in enumerate(book.catalogue):
+        if item.chapter_id == chapter_id: break
+    pre_id = -1 if i == 0 else book.catalogue[i - 1].chapter_id
+    after_id = -1 if i == len(book.catalogue) - 1 else book.catalogue[i + 1].chapter_id
+    render_dict = {
+        'res': RES,
+        'chapter': ch,
+        'pre_id': pre_id,
+        'after_id': after_id,
+        'book_id': book.book_id,
+        'book_name': book.book_name
+    }
+    return render_template('reading.html', **render_dict)
 
 
 if __name__ == '__main__':
