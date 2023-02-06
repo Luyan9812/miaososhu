@@ -2,9 +2,9 @@ import json
 import math
 
 from final import RESOURCE_DIR as RES
-from flask import Flask, render_template
 from service.DBService import DBService
 from service.ServerService import ServerService
+from flask import Flask, render_template, request, session
 
 
 app = Flask(__name__)
@@ -68,6 +68,25 @@ def chapter(chapter_id):
         'book_name': book.book_name
     }
     return render_template('reading.html', **render_dict)
+
+
+@app.route('/search', methods=['POST'])
+def search():
+    service = ServerService()
+    kw = request.form.get('kw')
+    search_type = int(request.form.get('type'))
+    print(kw, search_type)
+    books = service.search_local(kw=kw, search_type=search_type)
+    local_lines = math.ceil(len(books) / 3)
+    local_last_n = len(books) % 3 if len(books) % 3 else 3
+    render_dict = {
+        'kw': kw,
+        'res': RES,
+        'localBooks': books,
+        'localLines': local_lines,
+        'localLastN': local_last_n
+    }
+    return render_template('search.html', **render_dict)
 
 
 if __name__ == '__main__':

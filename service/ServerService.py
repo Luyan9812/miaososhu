@@ -17,6 +17,18 @@ def get_date():
     return f'{now.year}-{now.month}-{now.day}'
 
 
+def get_book_author(kw, search_type):
+    book_name = ''
+    author_name = ''
+    if search_type == 1:
+        book_name = kw
+    elif search_type == 2:
+        author_name = kw
+    else:
+        book_name, author_name = kw.split('@', maxsplit=1)
+    return book_name, author_name
+
+
 class ServerService(object):
     """ 专门处理服务器相关业务逻辑 """
 
@@ -69,6 +81,20 @@ class ServerService(object):
             for book_id in book_ids:
                 books.append(self.dbService.query_book_by_id(book_id=book_id))
         return books
+
+    def search_local(self, kw, search_type):
+        """ 搜索本地数据 """
+        con = ' AND book_type_id != 18 '
+        book_name, author_name = get_book_author(kw, search_type)
+        if search_type == 1:
+            books = self.dbService.query_book_like(kw=book_name, con=con)
+        elif search_type == 2:
+            books = self.dbService.query_book_by_author_like(author_name=author_name, con=con)
+        else:
+            books = self.dbService.query_book_by_book_author_like(book_name=book_name, author_name=author_name, con=con)
+        for book in books:
+            book.precise = len(book_name) / len(book.book_name)
+        return sorted(books, key=lambda x: x.precise, reverse=True)
 
 
 def main():

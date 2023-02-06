@@ -53,7 +53,6 @@ function checkFontSize() {
 		let book_name = $(boxs[i]).find('a');
 		let author_name = $(boxs[i]).find('p');
 		let length = book_name.text().length + author_name.text().length;
-		console.log(length);
 		if (length <= 12) continue;
 		book_name.css('font-size', '12px');
 		author_name.css('font-size', '12px');

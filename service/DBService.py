@@ -84,15 +84,6 @@ class DBService(object):
         book = self.__generate_book(row)
         return book
 
-    def query_book_like(self, kw):
-        """ 根据书名模糊匹配 """
-        books = []
-        condition = f'book_name LIKE "%{kw}%" '
-        for row in self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition):
-            book = self.__generate_book(row=row)
-            books.append(book)
-        return books
-
     def query_book_by_id(self, book_id, need_catalogue=False):
         """ 根据 id 查找书籍 """
         condition = f'id={book_id} '
@@ -100,10 +91,31 @@ class DBService(object):
         book = self.__generate_book(row, need_catalogue=need_catalogue)
         return book
 
-    def query_book_by_author(self, author_name):
-        """ 根据作者名查找书籍 """
+    def query_book_like(self, kw, con=''):
+        """ 根据书名模糊匹配 """
         books = []
-        condition = f'author_name="{author_name}" '
+        condition = f'book_name LIKE "%{kw}%" '
+        if con: condition += con
+        for row in self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition):
+            book = self.__generate_book(row=row)
+            books.append(book)
+        return books
+
+    def query_book_by_author_like(self, author_name, con=''):
+        """ 根据作者名模糊查找书籍 """
+        books = []
+        condition = f'author_name LIKE "%{author_name}%" '
+        if con: condition += con
+        for row in self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition):
+            book = self.__generate_book(row)
+            books.append(book)
+        return books
+
+    def query_book_by_book_author_like(self, book_name, author_name, con=''):
+        """ 根据书名、作者名模糊查找书籍 """
+        books = []
+        condition = f'book_name LIKE "%{book_name}%" AND author_name LIKE "%{author_name}%" '
+        if con: condition += con
         for row in self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition):
             book = self.__generate_book(row)
             books.append(book)
