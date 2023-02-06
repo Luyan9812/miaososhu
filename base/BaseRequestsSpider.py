@@ -167,6 +167,7 @@ class BaseRequestsSpider(object):
         save_epub(book)
         if need_txt:
             save_txt(book=book)
+        print(f'书籍《{book.book_name}》保存成功')
 
     def _parse_hot_list(self, html):
         """

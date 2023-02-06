@@ -93,7 +93,22 @@ class TaskService(object):
         books.sort(key=lambda x: x.precise, reverse=True)
         return books
 
-    def scrape_book(self, url_dict: dict):
+    def scrape_a_book(self, url, need_judge=False):
+        """ 根据URL爬取一本书籍 """
+        if not url: return
+        spider = self.chose_spider(url)
+        if spider is None: return
+        book = spider.scrape_book_index(url=url)
+        if need_judge:
+            # 进来就需要判断数据库里面是否有这本书
+            b = self.db_service.query_book_by_bookname_authorname(book_name=book.book_name, author_name=book.author_name)
+            if b.book_type != '未知':
+                print(f'《{book.book_name}》已入库')
+                return False
+        spider.scrape_full_book(book=book, need_save=True)
+        return True
+
+    def scrape_books(self, url_dict: dict):
         """ 提前找好网址，然后一个个爬取 """
         q_list = []
         p_list = list(url_dict.values())
@@ -120,7 +135,7 @@ def main():
     url_dict = {
         '间客': 'https://www.81zw.com/book/16931/',
     }
-    task.scrape_book(url_dict=url_dict)
+    task.scrape_books(url_dict=url_dict)
 
 
 if __name__ == '__main__':

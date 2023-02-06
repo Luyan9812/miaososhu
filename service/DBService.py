@@ -5,6 +5,7 @@ import helper.ListHelper as ListHelper
 from model.Book import Book
 from model.Chapter import Chapter
 from model.Catalogue import Catalogue
+from model.DownloadItem import DownloadItem
 from helper.DBHelper import MysqlHelper
 
 
@@ -17,6 +18,7 @@ class DBService(object):
         self.TABLE_BOOK = 'book'
         self.TABLE_CHAPTER = 'chapter'
         self.TABLE_CATALOGUE = 'catalogue'
+        self.TABLE_DOWNLOAD_QUEUE = 'download_queue'
         self.TABLE_DAILY_RECOMMENDATION = 'daily_recommendation'
 
     def __on_check(self):
@@ -161,14 +163,17 @@ class DBService(object):
 
     def save_book(self, book: Book):
         """ 存储书籍 """
+        type_id = self.save_type(book.book_type)
         b = self.query_book_by_bookname_authorname(book_name=book.book_name, author_name=book.author_name)
         if not b:
             data = book.get_db_dict()
-            type_id = self.save_type(book.book_type)
             data['book_type_id'] = type_id
             book_id = self.db_helper.insert(table_name=self.TABLE_BOOK, data=data)
             book.book_id = book_id
         else:
+            data = {'finish_status': book.finish_status, 'update_time': f"'{book.update_time}'",
+                    'info': f"'{book.info}'", 'book_type_id': type_id}
+            self.update_book_by_id(book_id=b.book_id, data=data)
             book.book_id = book_id = b.book_id
         self.save_catalogues(book)
         return book_id, not b
@@ -308,6 +313,39 @@ class DBService(object):
         data = {'book_id': book_id, 'recommend_date': recommend_date, 'resource': resource}
         com_id = self.db_helper.insert(table_name=self.TABLE_DAILY_RECOMMENDATION, data=data)
         return com_id
+
+    def query_download_item_by_id(self, qid):
+        """ 根据 id 查询一条下载记录 """
+        condition = f' id={qid} '
+        row = self.db_helper.query_one(table_name=self.TABLE_DOWNLOAD_QUEUE, condition=condition)
+        if not row: return None
+        qid, url, download_state = row
+        return DownloadItem(url=url, download_state=download_state, qid=qid)
+
+    def query_download_item_by_state(self, download_state):
+        """ 根据状态查询一条下载记录 """
+        condition = f' download_state={download_state} '
+        row = self.db_helper.query_one(table_name=self.TABLE_DOWNLOAD_QUEUE, condition=condition, limit='1')
+        if not row: return None
+        qid, url, download_state = row
+        return DownloadItem(url=url, download_state=download_state, qid=qid)
+
+    def update_download_item_by_id(self, download_item):
+        """ 根据 id 更新下载记录 """
+        condition = f' id={download_item.qid} '
+        data = {'url': f"'{download_item.url}'", 'download_state': download_item.download_state}
+        self.db_helper.update(table_name=self.TABLE_DOWNLOAD_QUEUE, data=data, condition=condition)
+
+    def save_download_item(self, url, download_state):
+        """
+        保存一条下载记录
+        :param url: 待下载的 url
+        :param download_state: 下载状态。0：待下载；1：下载中；2：下载成功；-1：下载失败。
+        :return:
+        """
+        data = {'url': url, 'download_state': download_state}
+        qid = self.db_helper.insert(table_name=self.TABLE_DOWNLOAD_QUEUE, data=data)
+        return qid
 
 
 def main():
