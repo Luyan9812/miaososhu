@@ -52,7 +52,7 @@ class ServerService(object):
         date = get_date()
         book_ids = self.dbService.query_commend_by_date(recommend_date=f"'{date}'", resource=0)
         if not book_ids:
-            all_ids = list(map(lambda x: x[0], self.dbService.query_all_books_id()))
+            all_ids = list(map(lambda x: x[0], self.dbService.query_all_books_id(con=' AND book_type_id != -1 ')))
             book_ids.extend(random.sample(all_ids, 12))
             for book_id in book_ids:
                 self.dbService.save_commend(book_id=book_id, recommend_date=date, resource=0)
@@ -68,15 +68,13 @@ class ServerService(object):
         if not book_ids:
             for spider in self.spiders.values():
                 bs = spider.hot_list()
-                if bs: books.extend(bs)
-            books = list(filter(lambda x: x.author_name, books))
-            bt = []
-            for book in books:
-                book_id, save_success = self.dbService.save_book(book=book)
-                if save_success:
-                    bt.append(book)
+                if not bs: continue
+                bs = list(filter(lambda x: x.author_name, bs))
+                books.extend(bs)
+                for book in bs:
+                    spider.save_cover_img(book)
+                    book_id, _ = self.dbService.save_book(book=book)
                     self.dbService.save_commend(book_id=book_id, recommend_date=date, resource=1)
-            books = bt
         else:
             for book_id in book_ids:
                 books.append(self.dbService.query_book_by_id(book_id=book_id))
@@ -84,7 +82,7 @@ class ServerService(object):
 
     def search_local(self, kw, search_type):
         """ 搜索本地数据 """
-        con = ' AND book_type_id != 18 '
+        con = ' AND book_type_id != -1 '
         book_name, author_name = get_book_author(kw, search_type)
         if search_type == 1:
             books = self.dbService.query_book_like(kw=book_name, con=con)

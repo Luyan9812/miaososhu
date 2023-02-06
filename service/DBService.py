@@ -126,9 +126,10 @@ class DBService(object):
         yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK,
                                                  condition='1=1 ', converter=self.__generate_book)
 
-    def query_all_books_id(self):
+    def query_all_books_id(self, con=''):
         """ 查询所有本站书籍的id """
-        condition = 'book_type_id != 18 '
+        condition = '1=1 '
+        if con: condition += con
         return self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition, fields=['id'])
 
     def query_book_by_finish_status(self, is_finish):

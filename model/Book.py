@@ -1,4 +1,12 @@
-from os.path import join, exists
+from os.path import join, abspath, dirname
+
+
+def get_project_path():
+    """ 获取项目的绝对路径 """
+    project_name = 'miaososhu/'
+    abs_p = abspath(dirname(__file__))
+    position = abs_p.rfind(project_name) + len(project_name)
+    return abs_p[:position]
 
 
 class Book(object):
@@ -37,10 +45,12 @@ class Book(object):
         self.total_chapter = 0
         self.current_chapter = 0
 
+        project_path = get_project_path()
         fname = f'{self.book_name}_{self.author_name}'
-        self.save_txt_path = join('/Users/luyan/Desktop/小说/txt', fname + '.txt')
-        self.save_img_path = join('/Users/luyan/Desktop/小说/封面图', fname + '.jpg')
-        self.save_epub_path = join('/Users/luyan/Desktop/小说/epub', fname + '.epub')
+
+        self.save_txt_path = join(project_path, 'server/static/txt', fname + '.txt')
+        self.save_img_path = join(project_path, 'server/static/covers', fname + '.jpg')
+        self.save_epub_path = join(project_path, 'server/static/epub', fname + '.epub')
 
         self.finish_describe = {-1: '未知', 0: '连载中', 1: '完结'}
 
@@ -55,23 +65,6 @@ class Book(object):
         return {'book_name': self.book_name, 'author_name': self.author_name,
                 'finish_status': self.finish_status, 'update_time': self.update_time,
                 'url': self.url, 'cover_img': self.cover_img, 'info': self.info}
-
-    def save(self, content, need_save_txt=True):
-        """ 将书籍保存 """
-        # 保存封面图
-        if content is not None:
-            with open(self.save_img_path, 'wb') as f:
-                f.write(content)
-        if need_save_txt:
-            self.save_txt()
-
-    def save_txt(self):
-        """ 将小说保存成 txt 格式 """
-        with open(self.save_txt_path, 'w') as f:
-            f.write("书籍描述信息\n\n" + self.desc())
-            for chapter in self.chapter_list:
-                f.write('\n\n\n' + chapter.display_name + '\n\n')
-                f.write(chapter.content)
 
     def desc(self):
         """ 获取书籍的描述信息 """

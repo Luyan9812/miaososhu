@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 @app.route('/index')
 def index():
+    """ 首页 """
     service = ServerService()
     self_books = service.get_self_recommends()
     line_items = [3] * (len(self_books) // 3)
@@ -26,6 +27,7 @@ def index():
 
 @app.route('/others', methods=['POST'])
 def other_novels():
+    """ 首页里面请求外站小说接口 """
     books_map = []
     service = ServerService()
     books = service.get_other_recommends()
@@ -37,6 +39,7 @@ def other_novels():
 
 @app.route('/catalogue/<int:book_id>')
 def catalogue(book_id):
+    """ 小说目录页面 """
     service = DBService()
     book = service.query_book_by_id(book_id=book_id, need_catalogue=True)
     render_dict = {
@@ -52,6 +55,7 @@ def catalogue(book_id):
 
 @app.route('/chapter/<int:chapter_id>')
 def chapter(chapter_id):
+    """ 阅读页面 """
     service = DBService()
     ch = service.query_chapter_by_id(chapter_id=chapter_id)
     book = service.query_book_by_id(book_id=ch.book_id, need_catalogue=True)
@@ -72,6 +76,7 @@ def chapter(chapter_id):
 
 @app.route('/search', methods=['POST'])
 def search():
+    """ 搜索界面 """
     service = ServerService()
     kw = request.form.get('kw')
     search_type = int(request.form.get('type'))

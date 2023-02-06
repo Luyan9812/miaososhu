@@ -16,22 +16,24 @@ function loadOtherNovels() {
 function renderOtherNovels(novels) {
 	let lineStr = '';
 	let lines = Math.ceil(1.0 * novels.length / 3);
+	let last_items = novels.length % 3 == 0 ? 3 : novels.length % 3;
 	for (let i = 0; i < lines; i++) {
 		lineStr += '<div class="book_line">';
-		let nitems = (i == lines - 1 ? novels.length % 3: 3);
+		let nitems = (i == lines - 1 ? last_items: 3);
 		for (let j = 0; j < nitems; j++) {
 			let book = novels[i * 3 + j];
+			let cover_path = "/static/covers/" + book.book_name + "_" + book.author_name + ".jpg";
 			lineStr += '<div class="book_box">';
-			lineStr += '<img href="'+ book.url +'" src="'+ book.cover_img +'"/>'
-			lineStr += '<div class="box_right">'
-			lineStr += '<div class="box_head">'
-			lineStr += '<a href="'+ book.url +'" target="_blank">'+ book.book_name +'</a>'
-			lineStr += '<p>'+ book.author_name +'</p>'
-			lineStr += '<div style="clear: both;"></div>'
-			lineStr += '</div>'
-			lineStr += '<p>'+ book.info.substring(0, 80) + '...' +'</p>'
-			lineStr += '</div>'
-			lineStr += '</div>'
+			lineStr += '<img href="'+ book.url +'" src="'+ cover_path +'"/>';
+			lineStr += '<div class="box_right">';
+			lineStr += '<div class="box_head">';
+			lineStr += '<a href="'+ book.url +'" target="_blank">'+ book.book_name +'</a>';
+			lineStr += '<p>'+ book.author_name +'</p>';
+			lineStr += '<div style="clear: both;"></div>';
+			lineStr += '</div>';
+			lineStr += '<p>'+ book.info.substring(0, 80) + '...' +'</p>';
+			lineStr += '</div>';
+			lineStr += '</div>';
 		}
 		lineStr += '</div>';
 	}

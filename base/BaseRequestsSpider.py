@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 
@@ -9,6 +10,15 @@ from base.Exceptions import self_catch
 from service.DBService import DBService
 from helper.EpubHelper import save_epub
 from base.Exceptions import StatusException
+
+
+def save_txt(book: Book):
+    """ 将小说保存成 txt 格式 """
+    with open(book.save_txt_path, 'w') as f:
+        f.write("书籍描述信息\n\n" + book.desc())
+        for chapter in book.chapter_list:
+            f.write('\n\n\n' + chapter.display_name + '\n\n')
+            f.write(chapter.content)
 
 
 class BaseRequestsSpider(object):
@@ -107,13 +117,13 @@ class BaseRequestsSpider(object):
             chapter.chapter_id = chapter_id
             if turn % self.fetch_interval == 0:
                 time.sleep(self.sleep_time)
-        if turn == 0 and not force_generate_file:
+        if turn == 0:
             print("没有更新")
-            return book
+            if not force_generate_file: return book
         chapters = self.service.query_chapter_by_bookid(book_id=book_id)
-        book.chapter_list.extend(chapters)
+        book.chapter_list = chapters
         book.current_chapter = len(chapters)
-        if need_save: self.save(book=book)
+        if need_save or force_generate_file: self.save(book=book)
         return book
 
     @self_catch
@@ -141,16 +151,22 @@ class BaseRequestsSpider(object):
         print('\t' + chapter.display_name)
         return chapter
 
-    def save(self, book: Book):
-        """ 保存书籍 """
-        content = None
+    def save_cover_img(self, book: Book):
+        """ 保存封面图 """
         try:
             content = None if exists(book.save_img_path) else self.fetch_b(book.cover_img)
+            if content is None: return
+            with open(book.save_img_path, 'wb') as f:
+                f.write(content)
         except StatusException as e:
             print(e)
-        finally:
-            book.save(content)
-            save_epub(book)
+
+    def save(self, book: Book, need_txt=False):
+        """ 保存书籍 """
+        self.save_cover_img(book=book)
+        save_epub(book)
+        if need_txt:
+            save_txt(book=book)
 
     def _parse_hot_list(self, html):
         """
@@ -183,3 +199,15 @@ class BaseRequestsSpider(object):
         :return: 章节内容
         """
         raise NotImplementedError
+
+
+def main():
+    """ 测试函数 """
+    project_name = 'miaososhu/'
+    absp = os.path.abspath(os.path.dirname(__file__))
+    posi = absp.rfind(project_name) + len(project_name)
+    print(absp[:posi])
+
+
+if __name__ == '__main__':
+    main()
