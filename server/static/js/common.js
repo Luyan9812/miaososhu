@@ -22,7 +22,7 @@ $('#search_icon').click(function () {
 function onCheck() {
 	let kw = $('#input_kw').val().trim();
 	let type = parseInt($('#search_type').val());
-	if (kw === '') return false;
+	if (kw.length < 2) return false;
 	if (type === 3) {
 		let pos = kw.indexOf('@');
 		if (pos <= 0 || pos >= kw.length - 1) return false;

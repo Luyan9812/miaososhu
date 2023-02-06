@@ -20,7 +20,7 @@ function renderOtherSearchResults(books) {
 	for (let i = 0; i < books.length; i++) {
 		let book = books[i];
 		str += '<tr>';
-		str += '<td><a href="'+ book.url +'">'+ book.book_name +'</a></td>';
+		str += '<td><a target="_blank" href="'+ book.url +'">'+ book.book_name +'</a></td>';
 		str += '<td>'+ book.author_name +'</td>';
 		str += '<td>'+ (book.update_time == "" ? "未知": book.update_time) +'</td>';
 		str += '<td><img href="'+ book.url +'" class="img_reload" src="/static/img/reload.png"/></td>';
@@ -28,6 +28,7 @@ function renderOtherSearchResults(books) {
 	}
 	$('.search_table').append($(str));
 	$('.img_reload').click(function() {
+		$(this).hide();
 		let url = $(this).attr('href')
 		$.post('/cloudSave', { //发送post请求
 			url: url

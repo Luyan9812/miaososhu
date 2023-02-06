@@ -5,6 +5,22 @@ $('.book_box>img').click(function () {
 	else location.href = url;
 });
 
+$('.tag').click(function () {
+	$(this).hide();
+	let href = $(this).find('p').attr('href');
+	let type = parseInt($(this).find('p').attr('type'));
+	if (type === 0) { // 下载逻辑
+		window.open(href);
+		return;
+	} else { // 转存逻辑
+		$.post('/cloudSave', { //发送post请求
+			url: href
+		}, function (res) {
+			console.log(JSON.parse(res))
+		});
+	}
+});
+
 function loadOtherNovels() {
 	$.post('/otherRecommend', { //发送post请求
 		id: 1
@@ -33,6 +49,13 @@ function renderOtherNovels(novels) {
 			lineStr += '<div style="clear: both;"></div>';
 			lineStr += '</div>';
 			lineStr += '<p>'+ book.info.substring(0, 80) + '...' +'</p>';
+			lineStr += '<div class="tag">';
+			if (book.book_type === '未知') {
+				lineStr += '<p type="1" href="'+ book.url +'" class="green">转存</p>';
+			} else {
+				lineStr += '<p type="0" href="/static/epub/'+ book.book_name +'_'+ book.author_name +'.epub" class="blue">下载</p>';
+			}
+			lineStr += '</div>';
 			lineStr += '</div>';
 			lineStr += '</div>';
 		}
@@ -44,6 +67,21 @@ function renderOtherNovels(novels) {
 		if (url.startsWith('http'))
 			window.open(url);
 		else location.href = url;
+	});
+	$('.tag').click(function () {
+		$(this).hide();
+		let href = $(this).find('p').attr('href');
+		let type = parseInt($(this).find('p').attr('type'));
+		if (type === 0) { // 下载逻辑
+			window.open(href);
+			return;
+		} else { // 转存逻辑
+			$.post('/cloudSave', { //发送post请求
+				url: href
+			}, function (res) {
+				console.log(JSON.parse(res))
+			});
+		}
 	});
 	checkFontSize();
 }

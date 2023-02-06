@@ -64,6 +64,7 @@
 	float: left;
 	padding-left: 5px;
 	box-sizing: border-box;
+	position: relative;
 }
 
 .box_head {
@@ -89,4 +90,24 @@
 	height: calc(100% - 30px);
 	font-size: 14px;
 	color: #aaaaaa;
+}
+
+.tag {
+	right: 0px;
+	bottom: 0px;
+	float: right;
+	position: absolute;
+}
+
+.tag>p {
+	float: left;
+	width: 56px;
+	height: 26px;
+	color: white;
+	font-size: 14px;
+	text-align: center;
+	line-height: 26px;
+	border-radius: 5px;
+	letter-spacing: 2px;
+	cursor: pointer;
 }

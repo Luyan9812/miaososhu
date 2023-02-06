@@ -110,12 +110,13 @@ def cloud_save():
 
 def _transform_book(book):
     book_map = {
-        "book_name": book.book_name,
-        "author_name": book.author_name,
-        "info": book.info,
         "url": book.url,
+        "info": book.info,
         "cover_img": book.cover_img,
-        'update_time': book.update_time
+        "book_name": book.book_name,
+        'book_type': book.book_type,
+        "author_name": book.author_name,
+        'update_time': book.update_time,
     }
     return book_map
 
