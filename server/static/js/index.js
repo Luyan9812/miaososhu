@@ -6,9 +6,10 @@ $('.book_box>img').click(function () {
 });
 
 function loadOtherNovels() {
-	$.post('/others', { //发送post请求
+	$.post('/otherRecommend', { //发送post请求
 		id: 1
 	}, function (res) {
+		$('.group_name>img').hide();
 		renderOtherNovels(JSON.parse(res));
 	});
 }
@@ -37,9 +38,7 @@ function renderOtherNovels(novels) {
 		}
 		lineStr += '</div>';
 	}
-	$('.group_name>img').hide();
 	$('#other_books').append($(lineStr));
-
 	$('.book_box>img').click(function () {
 		let url = $(this).attr('href');
 		if (url.startsWith('http'))

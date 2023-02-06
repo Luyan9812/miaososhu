@@ -17,3 +17,37 @@
 	text-align: center;
 	margin-top: 20px;
 }
+
+.search_table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.search_table tr:first-child {
+	font-weight: bold;
+}
+
+.search_table tr {
+	height: 30px;
+	border-bottom: 1px dashed #cccccc;
+}
+
+.search_table tr:last-child {
+	border-bottom: none;
+}
+
+.search_table td {
+	width: 25%;
+	text-align: center;
+}
+
+.search_table a {
+	color: #6f78a7;
+	text-decoration: none;
+}
+
+.search_table img {
+	width: 25px;
+	height: 25px;
+	cursor: pointer;
+}

@@ -17,14 +17,14 @@
 			<!-- 头部结束 -->
 			
 
-			{% if not localBooks %}
-			<div class="search_none">
-				<img src="{{res}}/img/search_none.png"/>
-				<p>未找到搜索结果</p>
-			</div>
-			{% else %}
 			<div class="book_group">
-				<div class="group_name">本站搜索结果</div>
+				<div class="group_name">本站关于“{{kw}}”的搜索结果</div>
+				{% if not localBooks %}
+				<div class="search_none">
+					<img src="{{res}}/img/search_none.png"/>
+					<p>未找到搜索结果</p>
+				</div>
+				{% else %}
 				{% for i in range(localLines) %}
 				<div class="book_line">
 					{% with n = localLastN if loop.index0 == localLines - 1 else 3 %}
@@ -45,10 +45,29 @@
 					{% endwith %}
 				</div>
 				{% endfor %}
+				{% endif %}
 			</div>
-			{% endif %}
 			
-			
+			<div data-kw="{{kw}}" data-type="{{type}}" id="div_otherSearch" class="book_group">
+				<div class="group_name">
+					<p>外站关于“诛仙”的搜索结果</p>
+					<img src="{{res}}/img/loading.gif"/>
+				</div>
+				<div class="search_none" style="display: none;">
+					<img src="{{res}}/img/search_none.png"/>
+					<p>未找到搜索结果</p>
+				</div>
+				<table class="search_table">
+					<tr>
+						<td>书名</td>
+						<td>作者名</td>
+						<td>更新日期</td>
+						<td>操作</td>
+					</tr>
+				</table>
+			</div>
+
+
 			<!-- 尾部开始 -->
 			{% include "footer.html" %}
 			<!-- 尾部结束 -->
@@ -57,5 +76,9 @@
 		<script src="{{res}}/js/jquery-3.4.1.min.js"></script>
 		<script src="{{res}}/js/common.js"></script>
 		<script src="{{res}}/js/index.js"></script>
+		<script src="{{res}}/js/search.js"></script>
+		<script>
+			loadOtherSearchResults();
+		</script>
 	</body>
 </html>

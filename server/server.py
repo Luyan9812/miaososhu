@@ -6,7 +6,6 @@ from service.DBService import DBService
 from service.ServerService import ServerService
 from flask import Flask, render_template, request, session
 
-
 app = Flask(__name__)
 
 
@@ -23,18 +22,6 @@ def index():
         'self_books': self_books
     }
     return render_template('index.html', **render_dict)
-
-
-@app.route('/others', methods=['POST'])
-def other_novels():
-    """ 首页里面请求外站小说接口 """
-    books_map = []
-    service = ServerService()
-    books = service.get_other_recommends()
-    for book in books:
-        books_map.append({"book_name": book.book_name, "author_name": book.author_name,
-                          "info": book.info, "url": book.url, "cover_img": book.cover_img})
-    return json.dumps(books_map, ensure_ascii=False)
 
 
 @app.route('/catalogue/<int:book_id>')
@@ -80,18 +67,57 @@ def search():
     service = ServerService()
     kw = request.form.get('kw')
     search_type = int(request.form.get('type'))
-    print(kw, search_type)
     books = service.search_local(kw=kw, search_type=search_type)
     local_lines = math.ceil(len(books) / 3)
     local_last_n = len(books) % 3 if len(books) % 3 else 3
     render_dict = {
         'kw': kw,
         'res': RES,
+        'type': search_type,
         'localBooks': books,
         'localLines': local_lines,
         'localLastN': local_last_n
     }
     return render_template('search.html', **render_dict)
+
+
+@app.route('/otherRecommend', methods=['POST'])
+def other_recommends():
+    """ 首页里面请求外站小说接口 """
+    service = ServerService()
+    books = service.get_other_recommends()
+    return json.dumps(list(map(_transform_book, books)), ensure_ascii=False)
+
+
+@app.route('/otherSearch', methods=['POST'])
+def other_search():
+    """ 搜索外站小说 """
+    service = ServerService()
+    kw = request.form.get('kw')
+    search_type = int(request.form.get('type'))
+    books = service.search_other(kw=kw, search_type=search_type)
+    return json.dumps(list(map(_transform_book, books)), ensure_ascii=False)
+
+
+@app.route('/cloudSave', methods=['POST'])
+def cloud_save():
+    """ 转存小说到本站 """
+    service = ServerService()
+    url = request.form.get('url')
+    print('转存：', url)
+    return '[]'
+
+
+def _transform_book(book):
+    book_map = {
+        "book_name": book.book_name,
+        "author_name": book.author_name,
+        "info": book.info,
+        "url": book.url,
+        "cover_img": book.cover_img,
+        'update_time': book.update_time
+    }
+    return book_map
 
 
 if __name__ == '__main__':

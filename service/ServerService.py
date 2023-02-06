@@ -94,6 +94,26 @@ class ServerService(object):
             book.precise = len(book_name) / len(book.book_name)
         return sorted(books, key=lambda x: x.precise, reverse=True)
 
+    def search_other(self, kw, search_type):
+        """ 搜索外站数据 """
+        tb, books = [], []
+        book_name, author_name = get_book_author(kw, search_type)
+        for spider in self.spiders.values():
+            tmp = spider.search(keyword=book_name)
+            if tmp: tb.extend(tmp[2])
+        for book in tb:
+            if search_type == 1:
+                if book_name not in book.book_name: continue
+                book.precise = len(book_name) / len(book.book_name)
+            elif search_type == 2:
+                if author_name not in book.author_name: continue
+                book.precise = len(author_name) / len(book.author_name)
+            else:
+                if book_name not in book.book_name or author_name not in book.author_name: continue
+                book.precise = len(book_name) / len(book.book_name) + len(author_name) / len(book.author_name)
+            books.append(book)
+        return sorted(books, key=lambda x: x.precise, reverse=True)
+
 
 def main():
     service = ServerService()
