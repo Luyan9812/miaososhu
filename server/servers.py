@@ -123,6 +123,39 @@ def authority():
     return render_template('authority.html', **render_dict)
 
 
+@app.route('/login')
+def authority_login():
+    """ 后台登录界面 """
+    render_dict = {
+        'res': RES,
+    }
+    return render_template('authority_login.html', **render_dict)
+
+
+@app.route('/manager')
+def authority_manager():
+    """ 后台管理界面 """
+    user = session.get('user')
+    if not user: return redirect('/login')
+    render_dict = {
+        'res': RES,
+    }
+    return render_template('authority_manager.html', **render_dict)
+
+
+@app.route('/loginValidate', methods=['POST'])
+def login_validate():
+    """ 登录检验 """
+    service = ServerService()
+    uname = request.form.get('uname')
+    upassword = request.form.get('upassword')
+    user = service.dbService.query_user_by_name_password(uname=uname, upassword=upassword)
+    if not user: return '用户名或密码错误'
+    if user.urole != 1: return '权限不足'
+    session['user'] = user.get_dict()
+    return 'Success'
+
+
 @app.route('/validateAuthcode', methods=['POST'])
 def validate_authcode():
     """ 验证鉴权码 """

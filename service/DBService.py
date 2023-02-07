@@ -2,6 +2,7 @@ import os
 import logging
 import helper.ListHelper as ListHelper
 
+from model.User import User
 from model.Book import Book
 from model.Chapter import Chapter
 from model.Catalogue import Catalogue
@@ -16,6 +17,7 @@ class DBService(object):
         self.db_helper = MysqlHelper(dbname='miao_novel')
         self.__on_check()
         self.TABLE_BOOK = 'book'
+        self.TABLE_USER = 'users'
         self.TABLE_CHAPTER = 'chapter'
         self.TABLE_CATALOGUE = 'catalogue'
         self.TABLE_DOWNLOAD_QUEUE = 'download_queue'
@@ -372,6 +374,22 @@ class DBService(object):
         data = {'auth_code': code, 'valid_times': valid_times}
         aid = self.db_helper.insert(table_name=self.TABLE_AUTHORITY_CODES, data=data)
         return aid
+
+    def query_user_by_id(self, uid):
+        """ 根据 id 查询用户 """
+        condition = f' uid={uid} '
+        row = self.db_helper.query_one(table_name=self.TABLE_USER, condition=condition)
+        if not row: return None
+        uid, uname, upassword, urole, umail = row
+        return User(uname=uname, upassword=upassword, urole=urole, umail=umail, uid=uid)
+
+    def query_user_by_name_password(self, uname, upassword):
+        """ 根据用户名、密码查询用户 """
+        condition = f' uname="{uname}" and upassword="{upassword}" '
+        row = self.db_helper.query_one(table_name=self.TABLE_USER, condition=condition)
+        if not row: return None
+        uid, uname, upassword, urole, umail = row
+        return User(uname=uname, upassword=upassword, urole=urole, umail=umail, uid=uid)
 
 
 def main():
