@@ -118,6 +118,11 @@ class ServerService(object):
         """ 判断鉴权码是否存在，存在就返回一条记录 """
         return self.dbService.query_authcode_by_code(code=authcode)
 
+    def decrease_authority(self, authcode, times=1):
+        """ 将对应鉴权码的有效次数减一 """
+        aid, _, valid_times = self.dbService.query_authcode_by_code(code=authcode)
+        self.dbService.update_authcode(aid=aid, valid_times=valid_times - times)
+
 
 def main():
     service = ServerService()

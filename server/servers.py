@@ -143,6 +143,7 @@ def other_recommends():
     if auth is not None: return '[]'
 
     service = ServerService()
+    service.decrease_authority(session[AUTH_KEY])
     books = service.get_other_recommends()
     return json.dumps(list(map(_transform_book, books)), ensure_ascii=False)
 
@@ -154,6 +155,7 @@ def other_search():
     if auth is not None: return '[]'
 
     service = ServerService()
+    service.decrease_authority(session[AUTH_KEY])
     kw = request.form.get('kw')
     search_type = int(request.form.get('type'))
     books = service.search_other(kw=kw, search_type=search_type)
@@ -166,10 +168,11 @@ def cloud_save():
     auth = auth_judge()
     if auth is not None: return '[]'
 
-    service = DBService()
+    service = ServerService()
+    service.decrease_authority(session[AUTH_KEY], times=5)
     url = request.form.get('url')
     print('转存：', url)
-    service.save_download_item(url=url, download_state=0)
+    service.dbService.save_download_item(url=url, download_state=0)
     return '[]'
 
 
