@@ -19,6 +19,7 @@ class DBService(object):
         self.TABLE_CHAPTER = 'chapter'
         self.TABLE_CATALOGUE = 'catalogue'
         self.TABLE_DOWNLOAD_QUEUE = 'download_queue'
+        self.TABLE_AUTHORITY_CODES = 'authority_codes'
         self.TABLE_DAILY_RECOMMENDATION = 'daily_recommendation'
 
     def __on_check(self):
@@ -346,6 +347,30 @@ class DBService(object):
         data = {'url': url, 'download_state': download_state}
         qid = self.db_helper.insert(table_name=self.TABLE_DOWNLOAD_QUEUE, data=data)
         return qid
+
+    def query_authcode_by_id(self, aid):
+        """ 根据 id 查询鉴权码 """
+        condition = f' id={aid} '
+        row = self.db_helper.query_one(table_name=self.TABLE_AUTHORITY_CODES, condition=condition)
+        return row
+
+    def query_authcode_by_code(self, code):
+        """ 根据码来查询 """
+        condition = f' auth_code="{code}" '
+        row = self.db_helper.query_one(table_name=self.TABLE_AUTHORITY_CODES, condition=condition)
+        return row
+
+    def update_authcode(self, aid, valid_times):
+        """ 修改鉴权码的有效次数 """
+        condition = f' id={aid} '
+        data = {'valid_times': valid_times}
+        self.db_helper.update(table_name=self.TABLE_AUTHORITY_CODES, data=data, condition=condition)
+
+    def save_authcode(self, code, valid_times):
+        """ 新增一条鉴权码 """
+        data = {'auth_code': code, 'valid_times': valid_times}
+        aid = self.db_helper.insert(table_name=self.TABLE_AUTHORITY_CODES, data=data)
+        return aid
 
 
 def main():

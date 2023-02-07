@@ -3,16 +3,35 @@ import math
 
 from service.DBService import DBService
 from service.ServerService import ServerService
-from server.final import RESOURCE_DIR as RES
-from flask import Flask, render_template, request, session
+from server.final import RESOURCE_DIR as RES, AUTH_KEY
+
+from flask import Flask
+from flask import render_template, request, session, redirect
 
 
 app = Flask(__name__)
+app.secret_key = 'LYLMX5201314'
+
+
+def auth_judge():
+    """ 判断是否鉴权 """
+    authcode = session.get(AUTH_KEY)
+    if not authcode:
+        return redirect('/authority?info=1')
+    else:
+        service = ServerService()
+        row = service.authority_exists(authcode=authcode)
+        if not row or row[2] <= 0:
+            return redirect('/authority?info=2')
+    return None
 
 
 @app.route('/index')
 def index():
     """ 首页 """
+    auth = auth_judge()
+    if auth is not None: return auth
+
     service = ServerService()
     self_books = service.get_self_recommends()
     line_items = [3] * (len(self_books) // 3)
@@ -28,6 +47,9 @@ def index():
 @app.route('/catalogue/<int:book_id>')
 def catalogue(book_id):
     """ 小说目录页面 """
+    auth = auth_judge()
+    if auth is not None: return auth
+
     service = DBService()
     book = service.query_book_by_id(book_id=book_id, need_catalogue=True)
     render_dict = {
@@ -44,6 +66,9 @@ def catalogue(book_id):
 @app.route('/chapter/<int:chapter_id>')
 def chapter(chapter_id):
     """ 阅读页面 """
+    auth = auth_judge()
+    if auth is not None: return auth
+
     service = DBService()
     ch = service.query_chapter_by_id(chapter_id=chapter_id)
     book = service.query_book_by_id(book_id=ch.book_id, need_catalogue=True)
@@ -65,6 +90,9 @@ def chapter(chapter_id):
 @app.route('/search', methods=['POST'])
 def search():
     """ 搜索界面 """
+    auth = auth_judge()
+    if auth is not None: return auth
+
     service = ServerService()
     kw = request.form.get('kw')
     search_type = int(request.form.get('type'))
@@ -82,9 +110,38 @@ def search():
     return render_template('search.html', **render_dict)
 
 
+@app.route('/authority')
+def authority():
+    """ 输入鉴权码界面 """
+    info = request.args.get('info')
+    if not info: info = ''
+    info = '鉴权码已失效' if info == '2' else '访问本站需提供鉴权码'
+    render_dict = {
+        'res': RES,
+        'info': info
+    }
+    return render_template('authority.html', **render_dict)
+
+
+@app.route('/validateAuthcode', methods=['POST'])
+def validate_authcode():
+    """ 验证鉴权码 """
+    authcode = request.form.get('authcode')
+    if not authcode: return '访问本站需提供鉴权码'
+    service = ServerService()
+    row = service.authority_exists(authcode=authcode)
+    if not row: return '无效鉴权码'
+    if row[2] <= 0: return '鉴权码已失效'
+    session[AUTH_KEY] = authcode
+    return 'Success'
+
+
 @app.route('/otherRecommend', methods=['POST'])
 def other_recommends():
     """ 首页里面请求外站小说接口 """
+    auth = auth_judge()
+    if auth is not None: return '[]'
+
     service = ServerService()
     books = service.get_other_recommends()
     return json.dumps(list(map(_transform_book, books)), ensure_ascii=False)
@@ -93,6 +150,9 @@ def other_recommends():
 @app.route('/otherSearch', methods=['POST'])
 def other_search():
     """ 搜索外站小说 """
+    auth = auth_judge()
+    if auth is not None: return '[]'
+
     service = ServerService()
     kw = request.form.get('kw')
     search_type = int(request.form.get('type'))
@@ -103,6 +163,9 @@ def other_search():
 @app.route('/cloudSave', methods=['POST'])
 def cloud_save():
     """ 转存小说到本站 """
+    auth = auth_judge()
+    if auth is not None: return '[]'
+
     service = DBService()
     url = request.form.get('url')
     print('转存：', url)

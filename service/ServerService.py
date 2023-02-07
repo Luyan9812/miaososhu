@@ -114,6 +114,10 @@ class ServerService(object):
             books.append(book)
         return sorted(books, key=lambda x: x.precise, reverse=True)
 
+    def authority_exists(self, authcode):
+        """ 判断鉴权码是否存在，存在就返回一条记录 """
+        return self.dbService.query_authcode_by_code(code=authcode)
+
 
 def main():
     service = ServerService()
