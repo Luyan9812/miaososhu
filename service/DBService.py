@@ -162,7 +162,7 @@ class DBService(object):
         b = self.query_book_by_bookname_authorname(book_name=book.book_name, author_name=book.author_name)
         return b is None or b.url == book.url
 
-    def save_book(self, book: Book):
+    def save_book(self, book: Book, need_update=False):
         """ 存储书籍 """
         type_id = self.save_type(book.book_type)
         b = self.query_book_by_bookname_authorname(book_name=book.book_name, author_name=book.author_name)
@@ -172,9 +172,10 @@ class DBService(object):
             book_id = self.db_helper.insert(table_name=self.TABLE_BOOK, data=data)
             book.book_id = book_id
         else:
-            data = {'finish_status': book.finish_status, 'update_time': f"'{book.update_time}'",
-                    'info': f"'{book.info}'", 'book_type_id': type_id}
-            self.update_book_by_id(book_id=b.book_id, data=data)
+            if need_update:
+                data = {'finish_status': book.finish_status, 'update_time': f"'{book.update_time}'",
+                        'info': f"'{book.info}'", 'book_type_id': type_id}
+                self.update_book_by_id(book_id=b.book_id, data=data)
             book.book_id = book_id = b.book_id
         self.save_catalogues(book)
         return book_id, not b
