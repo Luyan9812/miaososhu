@@ -1,5 +1,6 @@
 import json
 import math
+import random
 
 from service.DBService import DBService
 from service.ServerService import ServerService
@@ -24,6 +25,13 @@ def auth_judge():
         if not row or row[2] <= 0:
             return redirect('/authority?info=2')
     return None
+
+
+def get_random_authcode():
+    """ 生成随机鉴权码 """
+    key = 'ABCDEFGHIJKLMNOPQRStUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    random_str = ''.join(random.sample(list(key), 6))
+    return random_str
 
 
 @app.route('/index')
@@ -132,15 +140,51 @@ def authority_login():
     return render_template('authority_login.html', **render_dict)
 
 
+@app.route('/logout')
+def authority_logout():
+    """ 推出登录 """
+    session['user'] = None
+    return redirect('/login')
+
+
 @app.route('/manager')
 def authority_manager():
     """ 后台管理界面 """
     user = session.get('user')
     if not user: return redirect('/login')
+    service = ServerService()
+    codes = service.get_all_authcode()
     render_dict = {
         'res': RES,
+        'codes': codes,
+        'user': session['user']
     }
     return render_template('authority_manager.html', **render_dict)
+
+
+@app.route('/addAuthcode', methods=['POST'])
+def add_authcode():
+    """ 添加鉴权码 """
+    user = session.get('user')
+    if not user: return redirect('/login')
+    service = ServerService()
+    authcode = request.form.get('authcode')
+    valid_times = request.form.get('valid_times')
+    if authcode == '$random$':
+        valid_times = 50
+        authcode = get_random_authcode()
+    aid = service.dbService.save_authcode(code=authcode, valid_times=valid_times)
+    return json.dumps({'aid': aid, 'authcode': authcode, 'valid_times': valid_times, 'status': 1}, ensure_ascii=False)
+
+
+@app.route('/removeAuthcode', methods=['POST'])
+def remove_authcode():
+    """ 删除鉴权码 """
+    aid = request.form.get('aid')
+    if not aid: return 'Error'
+    aid = int(aid)
+    service = DBService()
+    service.delete_authcode(aid=aid)
 
 
 @app.route('/loginValidate', methods=['POST'])

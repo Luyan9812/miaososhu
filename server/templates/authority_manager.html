@@ -17,7 +17,7 @@
 					<img src="{{res}}/img/logo.png" style="height: 40px; margin-top: 5px;"/>
 				</div>
 				<div class="user">
-					<p>你好，卢研</p>
+					<p>你好，{{user['uname']}}</p>
 					<img id="logout" src="{{res}}/img/poweroff.png"/>
 				</div>
 				<div style="clear: both;"></div>
@@ -35,23 +35,17 @@
 					<td>有效次数</td>
 					<td>操作</td>
 				</tr>
+				{% for code in codes %}
 				<tr>
-					<td>wulawula</td>
-					<td><input type="text" value="100"/></td>
+					<td>{{code.authcode}}</td>
+					<td><input type="text" value="{{code.valid_times}}"/></td>
 					<td class="td_op">
-						<img data-id="1" class="delete" src="{{res}}/img/delete.png"/>
-						<img data-id="1" class="save" src="{{res}}/img/save.png"/>
+						<img data-id="{{code.aid}}" class="delete" src="{{res}}/img/delete.png"/>
+						<img data-id="{{code.aid}}" class="save" src="{{res}}/img/save.png"/>
 					</td>
 				</tr>
-				<tr>
-					<td>abaaba</td>
-					<td><input type="text" value="87"/></td>
-					<td class="td_op">
-						<img data-id="2" class="delete" src="{{res}}/img/delete.png"/>
-						<img data-id="2" class="save" src="{{res}}/img/save.png"/>
-					</td>
-				</tr>
-			</table>	
+				{% endfor %}
+			</table>
 		</div>
 		
 		<script src="{{res}}/js/jquery-3.4.1.min.js"></script>

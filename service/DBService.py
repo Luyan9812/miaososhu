@@ -363,11 +363,23 @@ class DBService(object):
         row = self.db_helper.query_one(table_name=self.TABLE_AUTHORITY_CODES, condition=condition)
         return row
 
+    def query_all_authcode(self):
+        """ 查询所有鉴权码 """
+        condition = ' 1=1 '
+        rows = self.db_helper.query_list(table_name=self.TABLE_AUTHORITY_CODES, condition=condition)
+        if not rows: return None
+        return rows
+
     def update_authcode(self, aid, valid_times):
         """ 修改鉴权码的有效次数 """
         condition = f' id={aid} '
         data = {'valid_times': valid_times}
         self.db_helper.update(table_name=self.TABLE_AUTHORITY_CODES, data=data, condition=condition)
+
+    def delete_authcode(self, aid):
+        """ 删除鉴权码 """
+        condition = f' id={aid} '
+        self.db_helper.delete(table_name=self.TABLE_AUTHORITY_CODES, condition=condition)
 
     def save_authcode(self, code, valid_times):
         """ 新增一条鉴权码 """

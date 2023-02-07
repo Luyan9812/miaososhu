@@ -1,3 +1,7 @@
+img {
+	cursor: pointer;
+}
+
 .user {
 	height: 40px;
 	margin-top: 4px;

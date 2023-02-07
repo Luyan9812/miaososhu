@@ -1,6 +1,7 @@
 import random
 
 from datetime import datetime
+from model.AuthCode import AuthCode
 from service.DBService import DBService
 from spiders.AixsSpider import AixsSpider
 from spiders.BiQuGe1Spider import BiQuGe1Spider
@@ -122,6 +123,16 @@ class ServerService(object):
         """ 将对应鉴权码的有效次数减一 """
         aid, _, valid_times = self.dbService.query_authcode_by_code(code=authcode)
         self.dbService.update_authcode(aid=aid, valid_times=valid_times - times)
+
+    def get_all_authcode(self):
+        """ 查询所有鉴权码 """
+        rows = self.dbService.query_all_authcode()
+        if not rows: return []
+        authcode_list = []
+        for row in rows:
+            aid, authcode, valid_times = row
+            authcode_list.append(AuthCode(authcode=authcode, valid_times=valid_times, aid=aid))
+        return authcode_list
 
 
 def main():
