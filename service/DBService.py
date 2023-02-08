@@ -326,6 +326,14 @@ class DBService(object):
         qid, url, download_state = row
         return DownloadItem(url=url, download_state=download_state, qid=qid)
 
+    def query_download_item_by_url(self, url):
+        """ 根据 url 查询下载记录 """
+        condition = f" url='{url}' "
+        row = self.db_helper.query_one(table_name=self.TABLE_DOWNLOAD_QUEUE, condition=condition)
+        if not row: return None
+        qid, url, download_state = row
+        return DownloadItem(url=url, download_state=download_state, qid=qid)
+
     def query_download_item_by_state(self, download_state):
         """ 根据状态查询一条下载记录 """
         condition = f' download_state={download_state} '

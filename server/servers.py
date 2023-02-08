@@ -265,9 +265,11 @@ def cloud_save():
     if auth is not None: return '[]'
 
     service = ServerService()
-    service.decrease_authority(session[AUTH_KEY], times=5)
     url = request.form.get('url')
+    item = service.dbService.query_download_item_by_url(url=url)
+    if item: return '[]'
     print('转存：', url)
+    service.decrease_authority(session[AUTH_KEY], times=5)
     service.dbService.save_download_item(url=url, download_state=0)
     return '[]'
 

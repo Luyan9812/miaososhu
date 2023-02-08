@@ -31,6 +31,9 @@
 						</tr>
 					</table>
 					<div class="op_btns">
+						{% if book.finish_status != 1 %}
+						<button href="{{book.url}}" id="btn_update" class="op_btn green">更新</button>
+						{% endif %}
 						<button href="{{res}}/epub/{{book.book_name + '_' + book.author_name + '.epub'}}" id="btn_download" class="op_btn blue">下载</button>
 						<button ch_id="{{book.catalogue[0].chapter_id}}" id="btn_read" class="op_btn oriange">开始阅读</button>
 					</div>
