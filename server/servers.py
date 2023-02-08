@@ -267,7 +267,10 @@ def cloud_save():
     service = ServerService()
     url = request.form.get('url')
     item = service.dbService.query_download_item_by_url(url=url)
-    if item: return '[]'
+    if item:
+        item.download_state = 0
+        service.dbService.update_download_item_by_id(download_item=item)
+        return '[]'
     print('转存：', url)
     service.decrease_authority(session[AUTH_KEY], times=5)
     service.dbService.save_download_item(url=url, download_state=0)

@@ -24,7 +24,7 @@ def spider():
             item.download_state = 1
             service.db_service.update_download_item_by_id(download_item=item)
 
-            service.scrape_a_book(url=item.url, need_judge=True)
+            service.scrape_a_book(url=item.url)
 
             item.download_state = 2
             service.db_service.update_download_item_by_id(download_item=item)
