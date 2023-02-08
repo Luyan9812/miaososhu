@@ -142,8 +142,9 @@ def authority_login():
 
 @app.route('/logout')
 def authority_logout():
-    """ 推出登录 """
-    session['user'] = None
+    """ 退出登录 """
+    user = session.get('user')
+    if user: session['user'] = None
     return redirect('/login')
 
 
@@ -152,6 +153,7 @@ def authority_manager():
     """ 后台管理界面 """
     user = session.get('user')
     if not user: return redirect('/login')
+
     service = ServerService()
     codes = service.get_all_authcode()
     render_dict = {
@@ -167,6 +169,7 @@ def add_authcode():
     """ 添加鉴权码 """
     user = session.get('user')
     if not user: return redirect('/login')
+
     service = ServerService()
     authcode = request.form.get('authcode')
     valid_times = request.form.get('valid_times')
@@ -180,11 +183,27 @@ def add_authcode():
 @app.route('/removeAuthcode', methods=['POST'])
 def remove_authcode():
     """ 删除鉴权码 """
+    user = session.get('user')
+    if not user: return redirect('/login')
+
     aid = request.form.get('aid')
     if not aid: return 'Error'
     aid = int(aid)
     service = DBService()
     service.delete_authcode(aid=aid)
+
+
+@app.route('/updateAuthcode', methods=['POST'])
+def update_authcode():
+    """ 修改鉴权码 """
+    user = session.get('user')
+    if not user: return redirect('/login')
+
+    service = DBService()
+    aid = request.form.get('aid')
+    valid_times = request.form.get('valid_times')
+    service.update_authcode(aid=aid, valid_times=valid_times)
+    return '修改成功'
 
 
 @app.route('/loginValidate', methods=['POST'])
