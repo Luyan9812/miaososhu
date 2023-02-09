@@ -53,6 +53,22 @@
 				<p>内容简介：</p>
 				<p>{{book.info}}</p>
 			</div>
+
+			<table class="book_catalogue">
+				<tr>
+					<td colspan="4">《{{book.book_name}}》最新章节</td>
+				</tr>
+				{% for i in range(4) %}
+				<tr>
+					{% for j in range(3) %}
+					{% with k = -1 - i * 3 - j %}
+					<td><a href="/chapter/{{book.catalogue[k].chapter_id}}">{{book.catalogue[k].chapter_name}}</a></td>
+					{% endwith %}
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+
 			<table class="book_catalogue">
 				<tr>
 					<td colspan="4">《{{book.book_name}}》全部章节</td>
