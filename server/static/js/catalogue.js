@@ -11,7 +11,7 @@ $('#btn_update').click(function() {
 	$.post('/cloudSave', { //发送post请求
 		url: url
 	}, function (res) {
-		alert('已添加到更新队列，勿重复更新');
+		alert('已成功添加到更新队列，勿重复更新');
 		$(that).prop('disabled', true);
 	});
 });

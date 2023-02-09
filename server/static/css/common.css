@@ -39,6 +39,15 @@ body {
 	float: left;
 }
 
+.header_info {
+	height: 30px;
+	margin-top: 10px;
+	margin-left: 30px;
+	line-height: 30px;
+	display: inline-block;
+	text-decoration: none;
+}
+
 .search {
 	width: 350px;
 	height: 40px;
