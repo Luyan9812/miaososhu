@@ -1,9 +1,7 @@
 .search_none {
 	width: 260px;
 	height: 260px;
-	margin: auto;
-	margin-top: 100px;
-	margin-bottom: 100px;
+	margin: 100px auto;
 }
 
 .search_none>img {

@@ -50,12 +50,30 @@
 	width: 34%;
 }
 
-.book_box>img {
-	width: 35%;
+.book_cover {
+	width: 100%;
+	height: 100%;
+	border-radius: 3px;
+}
+
+.book_img {
+	width: 110px;
 	height: 100%;
 	float: left;
 	cursor: pointer;
-	border-radius: 3px;
+	position: relative;
+}
+
+.finish_tag {
+	width: 110px;
+	height: 25px;
+	position: absolute;
+	bottom: 0px;
+	color: white;
+	line-height: 25px;
+	text-align: center;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
 }
 
 .box_right {

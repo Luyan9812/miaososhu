@@ -23,7 +23,14 @@
 					{% for j in range(nitem) %}
 					{% set book = books[i * 3 + j] %}
 					<div class="book_box">
-						<img href="/catalogue/{{book.book_id}}" src="{{res}}/covers/{{book.book_name + '_' + book.author_name + '.jpg'}}"/>
+						<div class="book_img">
+							{% if book.finish_status == 1 %}
+							<p class="finish_tag oriange">已完结</p>
+							{% else %}
+							<p class="finish_tag grey">未完结</p>
+							{% endif %}
+							<img class="book_cover" href="/catalogue/{{book.book_id}}" src="{{res}}/covers/{{book.book_name + '_' + book.author_name + '.jpg'}}"/>
+						</div>
 						<div class="box_right">
 							<div class="box_head">
 								<a href="/catalogue/{{book.book_id}}">{{book.book_name}}</a>

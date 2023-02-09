@@ -46,7 +46,9 @@ function renderOtherNovels(novels) {
 			let book = novels[i * 3 + j];
 			let cover_path = "/static/covers/" + book.book_name + "_" + book.author_name + ".jpg";
 			lineStr += '<div class="book_box">';
-			lineStr += '<img href="'+ book.url +'" src="'+ cover_path +'"/>';
+			lineStr += '<div class="book_img">';
+			lineStr += '<img class="book_cover" href="'+ book.url +'" src="'+ cover_path +'"/>';
+			lineStr += '</div>';
 			lineStr += '<div class="box_right">';
 			lineStr += '<div class="box_head">';
 			lineStr += '<a href="'+ book.url +'" target="_blank">'+ book.book_name +'</a>';
