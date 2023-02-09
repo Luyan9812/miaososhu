@@ -34,6 +34,7 @@ class ServerService(object):
     """ 专门处理服务器相关业务逻辑 """
 
     def __init__(self):
+        self.num_page = 60
         self.dbService = DBService()
         self.spiders = {
             'www.biquge7.top': BiQuGe1Spider(),
@@ -133,6 +134,15 @@ class ServerService(object):
             aid, authcode, valid_times = row
             authcode_list.append(AuthCode(authcode=authcode, valid_times=valid_times, aid=aid))
         return authcode_list
+
+    def get_local_book_by_page(self, page):
+        """ 获取指定页数的本地书籍 """
+        condition = f' book_type_id > 0 '
+        n = self.num_page
+        m = (page - 1) * n
+        limit = f' {m}, {n} '
+        books = self.dbService.query_book_by_condition(condition=condition, limit=limit)
+        return books
 
 
 def main():

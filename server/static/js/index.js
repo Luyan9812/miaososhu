@@ -21,6 +21,11 @@ $('.tag').click(function () {
 	}
 });
 
+$('.page_wrapper>p').click(function () {
+	let page = $(this).text().trim();
+	location.href = '/local?page=' + page;
+});
+
 function loadOtherNovels() {
 	$.post('/otherRecommend', { //发送post请求
 		id: 1

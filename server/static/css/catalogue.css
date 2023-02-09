@@ -9,6 +9,7 @@
 	width: 130px;
 	height: 100%;
 	float: left;
+	border-radius: 3px;
 }
 
 .head_right {

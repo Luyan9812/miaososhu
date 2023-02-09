@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>本站小说首页</title>
+		<link rel="icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="shortcut icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container">
+			<!-- 头部开始 -->
+			{% include "header.html" %}
+			<!-- 头部结束 -->
+			
+			
+			<div class="book_group">
+				<div class="group_name">本站小说集合</div>
+				{% for nitem in line_items %}
+				<div class="book_line">
+					{% with i = loop.index0 %}
+					{% for j in range(nitem) %}
+					{% set book = books[i * 3 + j] %}
+					<div class="book_box">
+						<img href="/catalogue/{{book.book_id}}" src="{{res}}/covers/{{book.book_name + '_' + book.author_name + '.jpg'}}"/>
+						<div class="box_right">
+							<div class="box_head">
+								<a href="/catalogue/{{book.book_id}}">{{book.book_name}}</a>
+								<p>{{book.author_name}}</p>
+								<div style="clear: both;"></div>
+							</div>
+							<p>{{book.info[:80]+'...'}}</p>
+							<div class="tag">
+								<p type="0" href="{{res}}/epub/{{book.book_name + '_' + book.author_name + '.epub'}}" class="blue">下载</p>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+					{% endwith %}
+				</div>
+				{% endfor %}
+			</div>
+
+			<div class="div_page">
+				<div class="page_wrapper">
+					{% for p in range(total) %}
+					{% with i = p + 1 %}
+					<p class="{{'page_selected' if page == i else ''}}">{{i}}</p>
+					{% endwith %}
+					{% endfor %}
+				</div>
+			</div>
+			
+			
+			<!-- 尾部开始 -->
+			{% include "footer.html" %}
+			<!-- 尾部结束 -->
+			
+		</div>
+		<script src="{{res}}/js/jquery-3.4.1.min.js"></script>
+		<script src="{{res}}/js/common.js"></script>
+		<script src="{{res}}/js/index.js"></script>
+		<script>
+			checkFontSize();
+		</script>
+	</body>
+</html>

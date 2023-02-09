@@ -1,4 +1,5 @@
 import os
+import time
 import logging
 import helper.ListHelper as ListHelper
 
@@ -77,9 +78,9 @@ class DBService(object):
                 catalogue_id, book_id, chapter_id, chapter_name, chapter_url = row
                 catalogue.append(Catalogue(chapter_name=chapter_name, chapter_url=chapter_url,
                                            catalogue_id=catalogue_id, book_id=book_id, chapter_id=chapter_id))
+            book.total_chapter = len(catalogue)
+            book.current_chapter = self.count_chapter(book_id=book_id)
         book.catalogue = catalogue
-        book.total_chapter = len(catalogue)
-        book.current_chapter = self.count_chapter(book_id=book_id)
         return book
 
     def query_book_by_bookname_authorname(self, book_name, author_name):
@@ -131,6 +132,16 @@ class DBService(object):
         yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK,
                                                  condition='1=1 ', converter=self.__generate_book)
 
+    def query_all_books_list(self):
+        """ 查询所有书籍，以列表返回 """
+        rows = self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=' 1=1 ')
+        if not rows: return None
+        books = []
+        for row in rows:
+            book = self.__generate_book(row=row)
+            books.append(book)
+        return books
+
     def query_all_books_id(self, con=''):
         """ 查询所有本站书籍的id """
         condition = '1=1 '
@@ -142,6 +153,20 @@ class DBService(object):
         condition = f'finish_status={is_finish} '
         yield from self._query_one_by_cond_yield(table_name=self.TABLE_BOOK,
                                                  condition=condition, converter=self.__generate_book)
+
+    def count_books_by_condition(self, condition):
+        """ 按照条件获取书籍的数目 """
+        nums = self.db_helper.count(table_name=self.TABLE_BOOK, condition=condition)
+        return nums
+
+    def query_book_by_condition(self, condition, limit=None):
+        """ 根据条件查询书籍 """
+        books = []
+        rows = self.db_helper.query_list(table_name=self.TABLE_BOOK, condition=condition, limit=limit)
+        if not rows: return books
+        for row in rows:
+            books.append(self.__generate_book(row=row))
+        return books
 
     def query_book_by_website(self, baseurl):
         """ 根据所属网站查询书籍 """

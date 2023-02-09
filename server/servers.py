@@ -57,6 +57,30 @@ def index():
     return render_template('index.html', **render_dict)
 
 
+@app.route('/local')
+def local_index():
+    """ 本站首页 """
+    auth = auth_judge()
+    if auth is not None: return auth
+
+    service = ServerService()
+    page = request.args.get('page')
+    page = 1 if not page else int(page)
+    books = service.get_local_book_by_page(page=page)
+    total = service.dbService.count_books_by_condition(condition=' book_type_id > 0 ')
+    total = math.ceil(total / service.num_page)
+    line_items = [3] * (len(books) // 3)
+    if len(books) % 3: line_items.append(len(books) % 3)
+    render_dict = {
+        'res': RES,
+        'line_items': line_items,
+        'books': books,
+        'total': total,
+        'page': page
+    }
+    return render_template('local_index.html', **render_dict)
+
+
 @app.route('/catalogue/<int:book_id>')
 def catalogue(book_id):
     """ 小说目录页面 """
