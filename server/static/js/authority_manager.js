@@ -1,4 +1,4 @@
-bindSaveDelete()
+bindSaveDelete();
 
 $('#logout').click(function() {
 	location.href = '/logout';
@@ -29,10 +29,13 @@ function addAuthcode(aid, authcode, validTimes) {
 	item += '</td>';
 	item += '</tr>';
 	$('table').append($(item));
-	bindSaveDelete()
+	bindSaveDelete();
 }
 
 function bindSaveDelete() {
+	$('.save').unbind();
+	$('.delete').unbind();
+
 	$('.save').click(function() {
 		let that = this;
 		let id = $(this).attr('data-id');

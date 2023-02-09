@@ -69,8 +69,8 @@ def catalogue(book_id):
     render_dict = {
         'res': RES,
         'book': book,
-        'lines': math.ceil(len(book.catalogue) / 4),
-        'last_items': len(book.catalogue) % 4 if len(book.catalogue) % 4 else 4,
+        'lines': math.ceil(len(book.catalogue) / 3),
+        'last_items': len(book.catalogue) % 3 if len(book.catalogue) % 3 else 3,
         'latest_chapter_id': book.catalogue[-1].chapter_id,
         'latest_chapter_name': book.catalogue[-1].chapter_name,
         'manager': user and user['urole'] == 1

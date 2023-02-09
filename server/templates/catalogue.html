@@ -59,9 +59,9 @@
 				</tr>
 				{% for i in range(lines) %}
 				<tr>
-					{% with n = last_items if loop.index0 == lines - 1 else 4 %}
+					{% with n = last_items if loop.index0 == lines - 1 else 3 %}
 					{% for j in range(n) %}
-					{% set k = i * 4 + j %}
+					{% set k = i * 3 + j %}
 					<td><a href="/chapter/{{book.catalogue[k].chapter_id}}">{{book.catalogue[k].chapter_name}}</a></td>
 					{% endfor %}
 					{% endwith %}
