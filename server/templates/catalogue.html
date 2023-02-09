@@ -23,7 +23,17 @@
 					<table>
 						<tr>
 							<td>作者：{{book.author_name}}</td>
+							{% if not manager %}
 							<td>状态：{{book.finish_describe[book.finish_status]}}</td>
+							{% else %}
+							<td>状态：
+								<select book_id="{{book.book_id}}" id="select_finish">
+									<option {{'selected' if book.finish_status == 1 else ''}} value="1">已完结</option>
+									<option {{'selected' if book.finish_status == 0 else ''}} value="0">未完结</option>
+									<option {{'selected' if book.finish_status == -1 else ''}} value="-1">未知</option>
+								</select>
+							</td>
+							{% endif %}
 						</tr>
 						<tr>
 							<td>最后更新：{{book.update_time}}</td>

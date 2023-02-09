@@ -34,6 +34,11 @@ def get_random_authcode():
     return random_str
 
 
+@app.route('/')
+def index2():
+    return redirect('/index')
+
+
 @app.route('/index')
 def index():
     """ 首页 """
@@ -59,6 +64,7 @@ def catalogue(book_id):
     if auth is not None: return auth
 
     service = DBService()
+    user = session.get('user')
     book = service.query_book_by_id(book_id=book_id, need_catalogue=True)
     render_dict = {
         'res': RES,
@@ -66,7 +72,8 @@ def catalogue(book_id):
         'lines': math.ceil(len(book.catalogue) / 4),
         'last_items': len(book.catalogue) % 4 if len(book.catalogue) % 4 else 4,
         'latest_chapter_id': book.catalogue[-1].chapter_id,
-        'latest_chapter_name': book.catalogue[-1].chapter_name
+        'latest_chapter_name': book.catalogue[-1].chapter_name,
+        'manager': user and user['urole'] == 1
     }
     return render_template('catalogue.html', **render_dict)
 
@@ -162,6 +169,20 @@ def authority_manager():
         'user': session['user']
     }
     return render_template('authority_manager.html', **render_dict)
+
+
+@app.route('/updateBookStatus', methods=['POST'])
+def update_book_status():
+    """ 更改书籍完结状态 """
+    user = session.get('user')
+    if not user: return redirect('/login')
+
+    service = DBService()
+    book_id = request.form.get('book_id')
+    finish_status = request.form.get('finish_status')
+    data = {'finish_status': int(finish_status)}
+    service.update_book_by_id(book_id=int(book_id), data=data)
+    return '修改成功'
 
 
 @app.route('/addAuthcode', methods=['POST'])

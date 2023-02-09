@@ -21,6 +21,17 @@ $('#btn_read').click(function() {
 	location.href = '/chapter/' + chapter_id;
 });
 
+$('#select_finish').change(function () {
+	let status = $(this).val();
+	let book_id = $(this).attr('book_id');
+	$.post('/updateBookStatus', { //发送post请求
+		book_id: book_id,
+		finish_status: status
+	}, function (res) {
+		alert(res)
+	});
+});
+
 function checkBtnSize() {
 	if ($('.op_btns').children('button').length < 3) return;
 	$('.op_btns').children('button').css('width', '200px');
