@@ -25,6 +25,9 @@ class DBService(object):
         self.TABLE_AUTHORITY_CODES = 'authority_codes'
         self.TABLE_DAILY_RECOMMENDATION = 'daily_recommendation'
 
+    def __del__(self):
+        self.db_helper.onclose()
+
     def __on_check(self):
         """ 检查表是否存在 """
         path = os.path.dirname(os.path.realpath(__file__))
