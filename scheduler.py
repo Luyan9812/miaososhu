@@ -23,7 +23,7 @@ def spider():
         item = service.db_service.query_download_item_by_state(download_state=0)
         if not item:
             print('哎呀，爬虫无事可做')
-            time.sleep(5)
+            time.sleep(20)
             continue
         try:
             item.download_state = 1
