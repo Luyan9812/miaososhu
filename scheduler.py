@@ -2,13 +2,19 @@ import time
 import requests
 import multiprocessing
 
+
+from environs import Env
 from server.servers import app
 from service.TaskService import TaskService
 
 
 def server():
     """ 服务器任务 """
-    app.run(host='172.17.0.6', port=4999)
+    env = Env()
+    env.read_env()
+    host = env.str('HOST')
+    port = env.int('PORT')
+    app.run(host=host, port=port)
 
 
 def spider():

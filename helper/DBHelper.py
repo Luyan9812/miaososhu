@@ -2,13 +2,21 @@ import time
 import pymysql
 import logging
 
+from environs import Env
+
 
 class MysqlHelper(object):
     """ 操作 mysql 数据库的辅助类 """
 
     def __init__(self, dbname):
-        self.db = pymysql.connect(host='localhost', port=3306,
-                                  user='root', password='Ly2425912!!', db=dbname)
+        env = Env()
+        env.read_env()
+        host = env.str('SQL_HOST')
+        port = env.int('SQL_PORT')
+        user = env.str('SQL_USER')
+        password = env.str('SQL_PASSWORD')
+        self.db = pymysql.connect(host=host, port=port,
+                                  user=user, password=password, db=dbname)
         self.cursor = self.db.cursor()
 
     def execute(self, sql):

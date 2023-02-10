@@ -49,3 +49,11 @@ CREATE TABLE IF NOT EXISTS authority_codes (
 	auth_code varchar(20),
 	valid_times INT
 );
+
+CREATE TABLE IF NOT EXISTS users (
+	uid INT auto_increment PRIMARY KEY,
+	uname varchar(50),
+	upassword varchar(50),
+	urole INT,
+	umail VARCHAR(100)
+);
