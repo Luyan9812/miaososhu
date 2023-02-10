@@ -2,6 +2,7 @@ import json
 import math
 import random
 
+from environs import Env
 from service.DBService import DBService
 from service.ServerService import ServerService
 from server.final import RESOURCE_DIR as RES, AUTH_KEY
@@ -10,8 +11,14 @@ from flask import Flask
 from flask import render_template, request, session, redirect
 
 
+env = Env()
+env.read_env()
+host = env.str('HOST')
+port = env.int('PORT')
+secret_key = env.str('SECRET_KEY')
+
 app = Flask(__name__)
-app.secret_key = 'LYLMX5201314'
+app.secret_key = secret_key
 
 
 def auth_judge():
@@ -345,4 +352,4 @@ def _transform_book(book):
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=4999)
+    app.run(host=host, port=port)
