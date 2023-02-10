@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>《{{book.book_name}}》目录</title>
+		<link rel="icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="shortcut icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/catalogue.css"/>
+	</head>
+	<body>
+		<div id="container">
+			
+			<!-- 头部开始 -->
+			{% include "header.html" %}
+			<!-- 头部结束 -->
+			
+			
+			<div class="book_head">
+				<img src="{{res}}/covers/{{book.book_name + '_' + book.author_name + '.jpg'}}"/>
+				<div class="head_right">
+					<h3>{{book.book_name}}</h3>
+					<table>
+						<tr>
+							<td>作者：{{book.author_name}}</td>
+							{% if not manager %}
+							<td>状态：{{book.finish_describe[book.finish_status]}}</td>
+							{% else %}
+							<td>状态：
+								<select book_id="{{book.book_id}}" id="select_finish">
+									<option {{'selected' if book.finish_status == 1 else ''}} value="1">已完结</option>
+									<option {{'selected' if book.finish_status == 0 else ''}} value="0">未完结</option>
+									<option {{'selected' if book.finish_status == -1 else ''}} value="-1">未知</option>
+								</select>
+							</td>
+							{% endif %}
+						</tr>
+						<tr>
+							<td>最后更新：{{book.update_time}}</td>
+							<td>最新章节：<a href="/chapter/{{latest_chapter_id}}">{{latest_chapter_name}}</a></td>
+						</tr>
+					</table>
+					<div class="op_btns">
+						{% if book.finish_status != 1 %}
+						<button href="{{book.url}}" id="btn_update" class="op_btn green">更新</button>
+						{% endif %}
+						<button href="{{res}}/epub/{{book.book_name + '_' + book.author_name + '.epub'}}" id="btn_download" class="op_btn blue">下载</button>
+						<button ch_id="{{book.catalogue[0].chapter_id}}" id="btn_read" class="op_btn oriange">开始阅读</button>
+					</div>
+				</div>
+			</div>
+			<div class="book_info">
+				<p>内容简介：</p>
+				<p>{{book.info}}</p>
+			</div>
+
+			<table class="book_catalogue">
+				<tr>
+					<td colspan="4">《{{book.book_name}}》最新章节</td>
+				</tr>
+				{% for i in range(4) %}
+				<tr>
+					{% for j in range(3) %}
+					{% with k = -1 - i * 3 - j %}
+					<td><a href="/chapter/{{book.catalogue[k].chapter_id}}">{{book.catalogue[k].chapter_name}}</a></td>
+					{% endwith %}
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+
+			<table class="book_catalogue">
+				<tr>
+					<td colspan="4">《{{book.book_name}}》全部章节</td>
+				</tr>
+				{% for i in range(lines) %}
+				<tr>
+					{% with n = last_items if loop.index0 == lines - 1 else 3 %}
+					{% for j in range(n) %}
+					{% set k = i * 3 + j %}
+					<td><a href="/chapter/{{book.catalogue[k].chapter_id}}">{{book.catalogue[k].chapter_name}}</a></td>
+					{% endfor %}
+					{% endwith %}
+				</tr>
+				{% endfor %}
+			</table>
+			
+			
+			<!-- 尾部开始 -->
+			{% include "footer.html" %}
+			<!-- 尾部结束 -->
+			
+		</div>
+		<script src="{{res}}/js/jquery-3.4.1.min.js"></script>
+		<script src="{{res}}/js/common.js"></script>
+		<script src="{{res}}/js/catalogue.js"></script>
+	</body>
+</html>

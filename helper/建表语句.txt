@@ -1,0 +1,51 @@
+CREATE TABLE IF NOT EXISTS book(
+    id INT auto_increment PRIMARY KEY,
+    book_name VARCHAR(100),
+    author_name VARCHAR(50),
+    book_type_id INT,
+    finish_status INT,
+    update_time VARCHAR(20),
+    url VARCHAR(100),
+    cover_img VARCHAR(100),
+    info VARCHAR(2000)
+);
+
+CREATE TABLE IF NOT EXISTS book_type(
+    id INT auto_increment PRIMARY KEY,
+    type_name varchar(50)
+);
+
+CREATE TABLE IF NOT EXISTS catalogue(
+    id INT auto_increment PRIMARY KEY,
+    book_id INT,
+    chapter_id INT,
+    chapter_name VARCHAR(100),
+    chapter_url VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS chapter(
+    id INT auto_increment PRIMARY KEY,
+    book_id INT,
+    order_id INT,
+    display_name VARCHAR(100),
+    content TEXT
+);
+
+CREATE TABLE IF NOT EXISTS daily_recommendation (
+	id INT auto_increment PRIMARY KEY,
+	book_id INT,
+	recommend_date VARCHAR(20),
+	resource INT
+);
+
+CREATE TABLE IF NOT EXISTS download_queue (
+	id INT auto_increment PRIMARY KEY,
+	url varchar(200),
+	download_state INT
+);
+
+CREATE TABLE IF NOT EXISTS authority_codes (
+	id INT auto_increment PRIMARY KEY,
+	auth_code varchar(20),
+	valid_times INT
+);

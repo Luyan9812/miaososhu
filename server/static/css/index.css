@@ -1,0 +1,162 @@
+.book_group {
+	width: 100%;
+	height: fit-content;
+	border: 3px solid #a6d3e8;
+	background-color: #fef9ef;
+	margin-bottom: 20px;
+	box-sizing: border-box;
+}
+
+.group_name {
+	width: 100%;
+	height: 40px;
+	font-size: 18px;
+	line-height: 40px;
+	padding-left: 20px;
+	background-color: #eeeeee;
+	border-bottom: 1px solid #d7d7d7;
+	box-sizing: border-box;
+}
+
+.group_name>p {
+	float: left;
+}
+
+.group_name>img {
+	width: 40px;
+	height: 40px;
+	margin-left: 20px;
+}
+
+.book_line {
+	width: 100%;
+	height: 180px;
+	margin-bottom: 10px;
+}
+
+.book_line:last-child {
+	margin-bottom: 0;
+}
+
+.book_box {
+	width: 33%;
+	height: 100%;
+	float: left;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.book_box:nth-child(2) {
+	width: 34%;
+}
+
+.book_cover {
+	width: 100%;
+	height: 100%;
+	border-radius: 3px;
+}
+
+.book_img {
+	width: 110px;
+	height: 100%;
+	float: left;
+	cursor: pointer;
+	position: relative;
+}
+
+.finish_tag {
+	width: 110px;
+	height: 25px;
+	position: absolute;
+	bottom: 0px;
+	color: white;
+	line-height: 25px;
+	text-align: center;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+
+.box_right {
+	width: 65%;
+	height: 100%;
+	float: left;
+	padding-left: 5px;
+	box-sizing: border-box;
+	position: relative;
+}
+
+.box_head {
+	width: 100%;
+	height: 30px;
+	border-bottom: 1px dotted #a6d3e8;
+	box-sizing: border-box;
+}
+
+.box_head>a {
+	color: #6f78a7;
+	text-decoration: none;
+	float: left;
+}
+
+.box_head>p {
+	color: #999999;
+	float: right;
+}
+
+.box_right>p {
+	width: 100%;
+	height: calc(100% - 30px);
+	font-size: 14px;
+	color: #aaaaaa;
+}
+
+.tag {
+	right: 0px;
+	bottom: 0px;
+	float: right;
+	position: absolute;
+}
+
+.tag>p {
+	float: left;
+	width: 56px;
+	height: 26px;
+	color: white;
+	font-size: 14px;
+	text-align: center;
+	line-height: 26px;
+	border-radius: 5px;
+	letter-spacing: 2px;
+	cursor: pointer;
+}
+
+.div_page {
+	width: 100%;
+	height: 40px;
+	margin-bottom: 20px;
+}
+
+.page_wrapper {
+	height: 100%;
+	width: fit-content;
+	margin: auto;
+}
+
+.page_wrapper>p {
+	width: 30px;
+	height: 30px;
+	float: left;
+	margin-top: 5px;
+	text-align: center;
+	line-height: 30px;
+	margin-left: 5px;
+	margin-right: 5px;
+	border: 1px solid #a6d3e8;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.page_selected {
+	color: white;
+	background-color: #a6d3e8;
+}

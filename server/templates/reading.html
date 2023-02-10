@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{{chapter.display_name}}_{{book_name}}</title>
+		<link rel="icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="shortcut icon" href="{{res}}/img/miao.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="{{res}}/css/reading.css"/>
+	</head>
+	<body>
+		<div id="container">
+			
+			<!-- 头部开始 -->
+			{% include "header.html" %}
+			<!-- 头部结束 -->
+			
+			
+			<div class="content">
+				<div class="content_title">《{{book_name}}》{{chapter.display_name}}</div>
+				<div class="content_ops">
+					<button data-id="{{pre_id}}" class="content_op btn_up">上一章</button>
+					<button data-id="{{book_id}}" class="content_op btn_catalogue">章节列表</button>
+					<button data-id="{{after_id}}" class="content_op btn_down">下一章</button>
+				</div>
+
+				{% for sentence in chapter.content.split() %}
+				<p>{{sentence}}</p>
+				{% endfor %}
+				
+				<div class="content_ops">
+					<button data-id="{{pre_id}}" class="content_op btn_up">上一章</button>
+					<button data-id="{{book_id}}" class="content_op btn_catalogue">章节列表</button>
+					<button data-id="{{after_id}}" class="content_op btn_down">下一章</button>
+				</div>
+			</div>
+			
+			
+			<!-- 尾部开始 -->
+			{% include "footer.html" %}
+			<!-- 尾部结束 -->
+			
+		</div>
+		<script src="{{res}}/js/jquery-3.4.1.min.js"></script>
+		<script src="{{res}}/js/common.js"></script>
+		<script src="{{res}}/js/reading.js"></script>
+		<script>
+			hideBtn();
+		</script>
+	</body>
+</html>
