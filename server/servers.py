@@ -34,6 +34,15 @@ def get_random_authcode():
     return random_str
 
 
+@app.before_request
+def flt():
+    """ 静态资源访问需要鉴权码 """
+    path = request.path
+    if 'covers' not in path and 'epub' not in path: return None
+    auth = auth_judge()
+    if auth is not None: return auth
+
+
 @app.route('/')
 def index2():
     return redirect('/index')

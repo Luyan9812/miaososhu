@@ -76,6 +76,8 @@ class ServerService(object):
                 for book in bs:
                     spider.save_cover_img(book)
                     book_id, _ = self.dbService.save_book(book=book)
+                    b = self.dbService.query_book_by_id(book_id=book_id)
+                    book.book_type = b.book_type
                     self.dbService.save_commend(book_id=book_id, recommend_date=date, resource=1)
         else:
             for book_id in book_ids:
