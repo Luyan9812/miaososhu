@@ -2,7 +2,6 @@ import time
 import requests
 import multiprocessing
 
-
 from environs import Env
 from server.servers import app
 from service.TaskService import TaskService

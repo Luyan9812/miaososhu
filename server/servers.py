@@ -2,7 +2,6 @@ import json
 import math
 import random
 
-
 from environs import Env
 from service.DBService import DBService
 from service.ServerService import ServerService
@@ -10,7 +9,6 @@ from server.final import RESOURCE_DIR as RES, AUTH_KEY
 
 from flask import Flask
 from flask import render_template, request, session, redirect
-
 
 
 env = Env()
